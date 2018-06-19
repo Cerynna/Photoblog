@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% block title %}Home{% endblock %}
+{% block body %}
+    {% import "default/macros/randomAOS.html.twig" as randomAOS %}
+    {% if notice is defined %}
+        {{ dump(notice) }}
+    {% endif %}
+
+
+<div class="space">
+
+</div>
+
+    <div class="home">
+
+        <div class="container">
+            <h2 id="">Albums</h2>
+            <div class="content">
+                <div class="row">
+                    {% for album in albums %}
+
+                        <a href="{{ path('album', { 'dir' :album.dir }) }}">
+                            <div class="col-lg-3 col-md-3 col-sm-6" data-aos="{{ randomAOS.randomAOS }}">
+                                {% if album.imageMiniature is not empty %}
+                                    <img src="{{ vich_uploader_asset(album.imageMiniature, 'imageFile') }}"
+                                         class="img-responsive img-rounded album-mini">
+                                {% endif %}
+
+                                <div class="album-mini-title">
+                                    {{ album.name|slice(0, 50) }}
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+    <script>
+        $(".active").removeClass("active");
+        $("#menu-album").addClass("active");
+    </script>
+    <script src="{{ asset('js/main.js') }}"></script>
+{% endblock %}
+

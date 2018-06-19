@@ -1,0 +1,13 @@
+{% macro statusIcon(value) %}
+    {% if (value == 0) %}
+        <i class="fa fa-clipboard"></i>
+    {% elseif (value == 1) %}
+        <i class="fa fa-flag-o"></i>
+    {% elseif (value == 2) %}
+        <i class="fa fa-flag"></i>
+    {% elseif (value == 3) %}
+        <i class="fa fa-snapchat-ghost"></i>
+    {% else %}
+        <i class="fa fa-clipboard"></i>
+    {% endif %}
+{% endmacro %}

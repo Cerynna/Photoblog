@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Projet Photo - {% block title %}{% endblock %}</title>
+
+    {% include 'default/components/head.html.twig' %}
+    {% block stylesheets %}
+    {% endblock %}
+        {{ render(controller('App\\Controller\\MainController::parallax')) }}
+</head>
+<body id="top">
+<nav>
+    {% block navBar %}
+        {% include 'default/components/navbar.html.twig' %}
+    {% endblock %}
+</nav>
+
+{% for message in app.flashes('notice') %}
+    <div class="notice">
+        {{ message }}
+    </div>
+{% endfor %}
+
+<section>
+    {% block body %}
+    {% endblock %}
+</section>
+
+<script
+        src="https://code.jquery.com/jquery-3.2.1.js"
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="{{ asset("js/jquery.sticky.js") }}"></script>
+<script>
+    setTimeout(function() {
+    $('.notice').addClass("hidden");
+
+    }, 3000);
+</script>
+{% block javascript %}
+{% endblock %}
+{#<script>
+    /*document.oncontextmenu = new Function("return false");*/
+</script>#}
+
+</body>
+</html>

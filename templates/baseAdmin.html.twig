@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Projet Photo - {% block title %}{% endblock %}</title>
+
+    {% include 'default/components/head.html.twig' %}
+    {% block stylesheets %}
+    {% endblock %}
+</head>
+<body id="top">
+<div class="myModal body">
+    <div class="content text-center">
+
+    </div>
+</div>
+
+{% for message in app.flashes('notice') %}
+    <div class="notice">
+        {{ message }}
+    </div>
+{% endfor %}
+
+<section class="admin">
+    <div class="row">
+        <div class="col-ws-12 text-center">
+            <h1>Administration</h1>
+        </div>
+        <div class="col-xs-2 fixed">
+            {% block navBar %}
+                {% include 'administration/navbar.html.twig' %}
+            {% endblock %}
+        </div>
+        <div class="col-xs-10">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </div>
+
+
+</section>
+
+<script
+        src="https://code.jquery.com/jquery-3.2.1.js"
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="{{ asset("js/jquery.sticky.js") }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.js"
+        integrity="sha256-GMd3rFxMDNnM5JQEpiKLLl8kSrDuG5egqchk758z59g=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/muuri/0.5.4/muuri.js"></script>
+<script src="{{ asset('js/jquery.dm-uploader.min.js') }}"></script>
+<script>
+    setTimeout(function () {
+        $('.notice').addClass("hidden");
+
+    }, 3000);
+    $('.myModal').on('click', function (data) {
+        $(this).hide();
+    })
+</script>
+
+{% block javascript %}
+{% endblock %}
+
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Newletter Nouvel album</title>
+
+    <style>
+        body {
+            font: 20px "Lato", sans-serif;
+            margin:0;
+        }
+        h2 {
+            background-color: rgba(40, 46, 52, 1);
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        h3 {
+            background: none;
+            color: #000;
+            text-align: left;
+        }
+        h4 {
+            background: none;
+            color: #000;
+            text-align: left;
+        }
+        a {
+            background-color: rgba(40, 46, 52, 1);
+            color: #FFF !important;
+        }
+        p {
+            border: none;
+            background: none;
+            font-size: 1em;
+            text-align: left;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            background-color: rgba(40, 46, 52, 1);
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .content {
+            width: 700px;
+            color: #777;
+            background-color: #ebebeb;
+            padding: 20px 50px;
+            text-align: justify;
+            border-radius: 10px;
+            margin: 50px auto;
+            font-size: 1em;
+        }
+
+        .album-mini {
+            margin: 10px auto;
+            height: 150px !important;
+            background: rgba(40, 46, 52, 0.5);
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -ms-border-radius: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        <h3>Un nouvel Album viens d'etre ajouté !</h3>
+        <h4>Bonjour,</h4>
+        <p>
+            Je viens de mettre en ligne un nouvelle album sur mon site.
+        <h2><a target="_blank" href="{{ url('album', { id_album : album.0.id }) }}">{{ album.0.name }}</a></h2>
+        </p>
+    </div>
+    <a target="_blank" href="{{ url('homepage') }}">Accueil du site</a> | <a target="_blank" href="{{ url('homepage') }}">Se désinscrire de la newsletter</a></div>
+
+</body>
+</html>

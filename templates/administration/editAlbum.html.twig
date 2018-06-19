@@ -1,0 +1,648 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}{{ title }}!{% endblock %}
+
+{% block body %}
+
+
+
+    <div class="editAlbum">
+        <div class="modalUploadPhoto" id="drop-area" data-album="{{ album.id }}">
+            <label for="inputFile">Selectionné des photos...</label>
+            <input type="file" id="inputFile">
+            <label for="sousAlbumSelect" class="hidden">Sous Album</label>
+            <select name="sousAlbum" id="sousAlbumSelect" class="form-control hidden">
+                <option value="0">Aucun</option>
+                {% for sousAlbum in album.sousAlbums %}
+                    <option value="{{ sousAlbum.id }}">{{ sousAlbum.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="albumId" id="albumId" value="{{ album.id }}" class="hidden">
+        </div>
+        <form method="post" enctype="multipart/form-data" id="addNewAlbumForm"
+              action="{{ path('administrationeditAlbum', {'id':album.id }) }}">
+            <div class="content">
+                <div class="row">
+                    <div class="col-xs-11">
+                        <h2>{{ album.name }}</h2>
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="submitForm">
+                            <i class="fa fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row titlePage">
+                    <div class="col-xs-4">
+                        <label for="title">Nom de l'album</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label for="dateTime">Date</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label for="status">Status de l'album</label>
+                    </div>
+                </div>
+
+                <div class="row round">
+                    <div class="col-xs-4  text-center">
+                        <input type="text" name="title" id="title" value="{{ album.name }}">
+                    </div>
+                    <div class="col-xs-4  text-center">
+                        <input type="date" name="dateTime" id="dateTime" value="{{ album.date|date('Y-m-d') }}">
+                    </div>
+                    <div class="col-xs-4  text-center">
+                        <select name="status" id="status" class="form-control">
+                            <option value="0" {% if album.status == 0 %} selected {% endif %}>En attente</option>
+                            <option value="1" {% if album.status == 1 %} selected {% endif %}>Publier</option>
+                            <option value="2" {% if album.status == 2 %} selected {% endif %}>A la une</option>
+                            <option value="3" {% if album.status == 3 %} selected {% endif %}>Privé</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="row titlePage">
+                    <div class="col-xs-11">
+                        <label for="messageAlbum">Commentaire de l'album</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="toggleMessageAlbum">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row round messageAlbum">
+                    <div class="col-xs-12  text-center ">
+                        <textarea name="messageAlbum" id="messageAlbum" cols="30"
+                                  rows="10">{{ album.message }}</textarea>
+                    </div>
+                </div>
+                <div class="row titlePage">
+                    <div class="col-xs-10">
+                        Les Photos
+                    </div>
+                    <div class="col-xs-1">
+                        <div class=" uploadImage" data-album="{{ album.id }}">
+                            <i class="fa fa-upload"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="togglePreviewAlbum">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row listPhotos text-center">
+                    {% if album.imageMiniature is null %}
+                        <div class="col-xs-12 noMiniature">
+                            Attention aucune Photo n'a été séléectionné pour etre en couverture
+                        </div>
+                    {% endif %}
+                    <div id="listPhotoAlbum">
+                        {% for photo in album.photos %}
+                            <div class="col-md-3 editPhoto" id="photo_{{ photo.id }}">
+                                <div class="menuPhoto">
+
+                                    {#<i class="fa fa-pencil"></i>#}
+
+                                    <i class="fa fa-trash deletePhoto{% if  album.imageMiniature is not null and album.imageMiniature.id == photo.id %} hidden{% endif %}"
+                                       data-photo="{{ photo.id }}"></i>
+
+                                    <i class="fa fa-eye viewPhoto"
+                                       data-photo="{{ asset("albums/" ~ photo.image) }}"></i>
+
+                                </div>
+                                <img src="{{ asset("albums/" ~ photo.image) }}"
+                                     class=" img-responsive img-rounded album-mini{% if album.imageMiniature is not null and album.imageMiniature.id == photo.id %} selected{% endif %}"
+                                     data-photo="{{ photo.id }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% for sousAlbum in album.sousAlbums %}
+
+                        <div class="col-md-12 col-sm-12 text-center">
+                            <h4>
+                                <div class="row">
+                                    <div class="col-xs-11">
+                                        {{ sousAlbum.name }}
+                                    </div>
+                                    <div class="col-xs-1 uploadImage" data-sousAlbum="{{ sousAlbum.id }}">
+                                        <i class="fa fa-upload"></i>
+                                    </div>
+                                </div>
+                            </h4>
+                        </div>
+                        <div id="listPhotoSousAlbum_{{ sousAlbum.id }}">
+                            {% for photo in sousAlbum.photos %}
+                                <div class="col-md-3 editPhoto" id="photo_{{ photo.id }}">
+                                    <div class="menuPhoto">
+                                        {#<i class="fa fa-pencil"></i>#}
+                                        <i class="fa fa-trash deletePhoto{% if  album.imageMiniature is not null and album.imageMiniature.id == photo.id %} hidden{% endif %}"
+                                           data-photo="{{ photo.id }}"></i>
+                                        <i class="fa fa-eye viewPhoto"
+                                           data-photo="{{ asset("albums/" ~ photo.image) }}"></i>
+
+                                    </div>
+                                    <img src="{{ asset("albums/" ~ photo.image) }}"
+                                         class="img-responsive img-rounded album-mini{% if  album.imageMiniature is not null and album.imageMiniature.id == photo.id %} selected{% endif %}"
+                                         data-photo="{{ photo.id }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+                <div class="row titlePage">
+                    <div class="col-xs-11">
+                        Sous Albums
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="togglelistSousAlbum">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="listSousAlbum round">
+                    {% for key, sousAlbum in album.sousAlbums %}
+                        <div class="row sousAlbum" id="idSousAlbum_{{ key }}">
+                            <div class="col-xs-2 text-center">
+                                {% if key+1 != album.sousAlbums|length %}
+                                    <div class="buttonSousAlbum" onclick="changePositionAlbum({{ key }}, 'down')">
+                                        <i class="fa fa-angle-down"></i>
+                                    </div>
+                                {% endif %}
+                                {% if key !=0 %}
+                                    <div class="buttonSousAlbum" onclick="changePositionAlbum({{ key }}, 'up')">
+                                        <i class="fa fa-angle-up"></i>
+                                    </div>
+                                {% endif %}
+
+
+                            </div>
+                            <div class="col-xs-9">
+                                <input type="text" class="sousAlbumName" name="sousAlbumName[{{ key }}]"
+                                       id="sousAlbumName[{{ key }}]" value="{{ sousAlbum.name }}">
+                            </div>
+                            <div class="col-xs-1">
+                                <div class="buttonSousAlbum" onclick="addCommentSousAlbum({{ key }})">
+                                    <i class="fa fa-paragraph"></i>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <input type="text" value="{{ key }}" class="inputPosition" readonly>
+                                <input type="text" value="{{ sousAlbum.id }}" class="sousAlbumId" name="sousAlbumId[]"
+                                       readonly>
+                                <textarea cols="30" rows="10" class="sousAlbumMessage"
+                                          name="sousAlbumMessage[{{ key }}]"
+                                          id="sousAlbumMessage[{{ key }}]">{{ sousAlbum.message }}</textarea>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+
+                <div class="row titlePage">
+                    <div class="col-xs-11">
+                        Liste des commentaires
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="togglelistComment">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="listComment">
+                    {% for key, comment in album.comments %}
+                        <div class="row round" id="idComment_{{ comment.id }}">
+                            <div class="comment">
+                                <div class="auteur">{{ comment.name }}</div>
+                                <div class="date">{{ comment.date|date("d/m/Y") }}</div>
+                                    {{ comment.message|nl2br }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+
+
+    <script>
+
+
+        $("#drop-area").dmUploader({
+            url: '/ajax/uploadPhoto',
+            //... More settings here...
+            allowedTypes: "image/*",
+
+            extraData: function () {
+                return {
+                    "idAlbum": $('#albumId').val(),
+                    "idSousAlbum": $('#sousAlbumSelect').find(":selected").val(),
+                };
+            },
+
+            onInit: function () {
+                console.log('Callback: Plugin initialized');
+
+            },
+            onUploadSuccess: function (id, data) {
+
+                $('#photo_' + id).remove();
+                if (data[3] != 0) {
+                    let html = $('#listPhotoSousAlbum_' + data[3]).html() + '<div class="col-md-3 editPhoto" id="photo_' + data[1] + '">' +
+                        '<div class="menuPhoto">\n' +
+                        '</div>' +
+                        '<img src="/albums/' + data[0] + '" class="img-responsive img-rounded album-mini">' +
+                        '</div>';
+                    $('#listPhotoSousAlbum_' + data[3]).html(html);
+                } else {
+                    let html = $('#listPhotoAlbum').html() + '<div class="col-md-3 editPhoto" id="photo_' + data[1] + '">' +
+                        '<div class="menuPhoto">\n' +
+                        '</div>' +
+                        '<img src="/albums/' + data[0] + '" class="img-responsive img-rounded album-mini">' +
+                        '</div>';
+                    $('#listPhotoAlbum').html(html);
+                }
+
+
+                console.log(data);
+                console.log(id);
+
+            },
+            onUploadProgress: function (id, percent) {
+                console.log(percent)
+            },
+            onNewFile: function (id, file) {
+                console.log(file)
+            },
+            onBeforeUpload: function (id) {
+
+
+                let html = '<div class="col-md-3 editPhoto" id="photo_' + id + '">' +
+                    '<img src="{{ asset('img/loading.gif') }}" class="img-responsive img-rounded album-mini">' +
+                    '</div>';
+
+                html += $('.listPhotos').html()
+
+                $('.listPhotos').html(html);
+
+            }
+
+            // ... More callbacks
+        });
+
+
+        $('.toggleMessageAlbum').on('click', function (data) {
+            $('.messageAlbum').slideToggle()
+        });
+        $('.togglePreviewAlbum').on('click', function (data) {
+            $('.listPhotos').slideToggle()
+        });
+        $('.togglelistSousAlbum').on('click', function (data) {
+            $('.listSousAlbum').slideToggle()
+        });
+        $('.togglelistComment').on('click', function (data) {
+            $('.listComment').slideToggle()
+        });
+
+
+        $('.submitForm').on('click', function (data) {
+            $('form#addNewAlbumForm').submit();
+        });
+
+
+        $('.uploadImage').on('click', function (e) {
+
+            let sousAlbum = $(this).data('sousalbum');
+            let modalUploadPhoto = $('.modalUploadPhoto');
+            if (sousAlbum !== undefined) {
+                $('#sousAlbumSelect option[value="' + sousAlbum + '"]').prop('selected', true);
+            }
+            modalUploadPhoto.css({
+                'top': e.pageY - 100 + 'px',
+                'left': e.pageX - 200 + 'px',
+                'display': 'block'
+            });
+
+        });
+
+        $('.modalUploadPhoto').on('mouseleave', function (e) {
+            $(this).css({
+                'display': 'none'
+            })
+
+        });
+
+
+        $('.deletePhoto').on('click', function (data) {
+
+            confirm('Tu va supprimer une photo es tu sur ?');
+            $.ajax({
+                type: 'POST',
+                data: {
+                    idPhoto: $(this).data('photo'),
+                },
+                url: "/ajax/deletePhoto",
+                dataType: 'json',
+                timeout: 2000,
+                success: function (response) {
+                    $('#photo_' + response).hide()
+                    console.log(response);
+
+                },
+                error: function () {
+
+                }
+            })
+
+
+        });
+        $('.viewPhoto').on('click', function (data) {
+            $('.myModal .content').html('<img src="' + $(this).data('photo') + '" alt="" class="img-responsive">')
+            $('.myModal').show();
+        });
+
+
+        $('.listPhotos img').on('click', function (data) {
+            $('.noMiniature').hide();
+            let oldPhoto = $('.listPhotos img.selected').data('photo');
+            let newPhoto = $(this).data('photo')
+
+            $('#photo_' + oldPhoto + ' .deletePhoto').removeClass('hidden');
+            $('#photo_' + newPhoto + ' .deletePhoto').addClass('hidden');
+
+            $('#photo_' + oldPhoto + ' img').removeClass('selected');
+            $('#photo_' + newPhoto + ' img').addClass('selected');
+
+            $.ajax({
+                type: 'POST',
+                data: {
+                    idAlbum: {{ album.id }},
+                    idPhoto: $(this).data('photo'),
+                },
+                url: "/ajax/changeMiniature",
+                dataType: 'json',
+                timeout: 2000,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function () {
+
+                }
+            })
+        });
+
+        function changePositionAlbum(key, operator) {
+
+            let valuePosition = parseInt($('#idSousAlbum_' + key + ' input.inputPosition').val());
+
+
+            let fromInputDir = $('#idSousAlbum_' + key + ' input.sousAlbumDir');
+            let fromInputName = $('#idSousAlbum_' + key + ' input.sousAlbumName');
+            let fromInputMessage = $('#idSousAlbum_' + key + ' textarea.sousAlbumMessage');
+            let fromInputId = $('#idSousAlbum_' + key + ' input.sousAlbumId');
+
+            let fromAlbumDir = fromInputDir.val();
+            let fromAlbumName = fromInputName.val();
+            let fromAlbumMessage = fromInputMessage.val();
+            let fromAlbumId = fromInputId.val();
+
+            let newPosition = 0;
+            if (operator === "down") {
+                newPosition = valuePosition + 1;
+            }
+            if (operator === "up") {
+                newPosition = valuePosition - 1;
+            }
+            let toInputDir = $('#idSousAlbum_' + newPosition + ' input.sousAlbumDir');
+            let toInputName = $('#idSousAlbum_' + newPosition + ' input.sousAlbumName');
+            let toInputMessage = $('#idSousAlbum_' + newPosition + ' textarea.sousAlbumMessage');
+            let toInputId = $('#idSousAlbum_' + newPosition + ' input.sousAlbumId');
+
+            let toAlbumDir = toInputDir.val();
+            let toAlbumName = toInputName.val();
+            let toAlbumMessage = toInputMessage.val();
+            let toAlbumId = toInputId.val();
+
+
+            fromInputDir.val(toAlbumDir);
+            fromInputName.val(toAlbumName);
+            fromInputMessage.val(toAlbumMessage);
+            fromInputId.val(toAlbumId);
+
+            toInputDir.val(fromAlbumDir);
+            toInputName.val(fromAlbumName);
+            toInputMessage.val(fromAlbumMessage);
+            toInputId.val(fromAlbumId);
+
+
+        }
+
+        function addCommentSousAlbum(key) {
+            let inputMessage = $('#idSousAlbum_' + key + ' textarea.sousAlbumMessage');
+            inputMessage.slideToggle();
+        }
+
+        /*
+
+                function changePositionAlbum(key, operator) {
+
+                    let valuePosition = parseInt($('#idSousAlbum_' + key + ' input.inputPosition').val());
+
+
+                    let fromInputDir = $('#idSousAlbum_' + key + ' input.sousAlbumDir');
+                    let fromInputName = $('#idSousAlbum_' + key + ' input.sousAlbumName');
+                    let fromInputMessage = $('#idSousAlbum_' + key + ' textarea.sousAlbumMessage');
+
+                    let fromAlbumDir = fromInputDir.val();
+                    let fromAlbumName = fromInputName.val();
+                    let fromAlbumMessage = fromInputMessage.val();
+
+                    let newPosition = 0;
+                    if (operator === "down") {
+                        newPosition = valuePosition + 1;
+                    }
+                    if (operator === "up") {
+                        newPosition = valuePosition - 1;
+                    }
+                    let toInputDir = $('#idSousAlbum_' + newPosition + ' input.sousAlbumDir');
+                    let toInputName = $('#idSousAlbum_' + newPosition + ' input.sousAlbumName');
+                    let toInputMessage = $('#idSousAlbum_' + newPosition + ' textarea.sousAlbumMessage');
+
+                    let toAlbumDir = toInputDir.val();
+                    let toAlbumName = toInputName.val();
+                    let toAlbumMessage = toInputMessage.val();
+
+
+                    fromInputDir.val(toAlbumDir);
+                    fromInputName.val(toAlbumName);
+                    fromInputMessage.val(toAlbumMessage);
+
+                    toInputDir.val(fromAlbumDir);
+                    toInputName.val(fromAlbumName);
+                    toInputMessage.val(fromAlbumMessage);
+
+
+                }
+
+                function addCommentSousAlbum(key) {
+                    let inputMessage = $('#idSousAlbum_' + key + ' textarea.sousAlbumMessage');
+                    inputMessage.slideToggle();
+                }
+
+
+                $(function () {
+
+                    let imagesPreview = function (input, placeToInsertImagePreview) {
+                        if (input.files) {
+                            let filesAmount = input.files.length;
+                            let countPhotos = 0;
+                            for (let i = 0; i < filesAmount; i++) {
+                                if (!input.files[i].type.indexOf("image")) {
+
+                                    let reader = new FileReader();
+                                    reader.onload = function (event) {
+                                        let html = '<label for="photo_' + i + '">';
+                                        if (countPhotos === 0) {
+                                            html += '<input type="radio" name="miniature[]" id="photo_' + i + '" value="' + i + '" checked>';
+                                        }
+                                        else {
+                                            html += '<input type="radio" name="miniature[]" id="photo_' + i + '" value="' + i + '">';
+                                        }
+                                        html += '<img src="' + event.target.result + '" alt="" width="200px">' +
+                                            '</label>';
+                                        $(placeToInsertImagePreview).append(html);
+
+                                        countPhotos++;
+
+                                    };
+                                    reader.readAsDataURL(input.files[i]);
+                                }
+                            }
+                        }
+                    };
+
+                    let addInputSousAlbum = function (sousAlbumName) {
+
+                        $('div.listSousAlbum').append(sousAlbumName)
+
+                    };
+
+
+                    $('#file').on('change', function (data) {
+                        $('div.gallery').html('');
+                        $('div.listSousAlbum').html('');
+                        imagesPreview(this, 'div.gallery');
+
+
+                        let arrFiles = this.files;
+
+                        class Album {
+                            constructor(name = null) {
+                                this.name = name;
+                                this.sousAlbumsName = [];
+                                this.file = []
+                            }
+
+                            addName(name) {
+                                this.name = name;
+                            }
+
+                            addFile(file) {
+                                this.file.push(file);
+                            }
+
+                            addSousAlbumsName(sousAlbum) {
+                                if (this.sousAlbumsName.indexOf(sousAlbum) < 0) {
+                                    this.sousAlbumsName.push(sousAlbum);
+                                }
+                            }
+
+                            addSousAlbums(sousAlbum, file) {
+                                this.addSousAlbumsName(sousAlbum);
+                            }
+                        }
+
+                        let albumEntity = new Album();
+                        for (let idFile in arrFiles) {
+                            if ($.isNumeric(idFile)) {
+                                if (arrFiles[idFile].webkitRelativePath !== undefined) {
+                                    let fileSplit = arrFiles[idFile].webkitRelativePath.split('/');
+                                    if (fileSplit.length === 2) {
+                                        albumEntity.addName(fileSplit[0]);
+                                        albumEntity.addFile(arrFiles[idFile].webkitRelativePath);
+                                    }
+                                    if (fileSplit.length === 3) {
+                                        albumEntity.addSousAlbums(fileSplit[1], fileSplit[2]);
+                                        albumEntity.addFile(arrFiles[idFile].webkitRelativePath);
+                                    }
+                                }
+                            }
+                        }
+
+                        if ($('#title').val() === "") {
+
+                            $('#title').val(albumEntity.name);
+                        }
+
+
+                        let maxSousAlbum = albumEntity.sousAlbumsName.length;
+
+
+                        console.log(albumEntity);
+
+                        $('div.listSousAlbum').append('<textarea name="arrFiles" class="arrFiles">' + JSON.stringify(albumEntity.file) + '</textarea>')
+
+                        albumEntity.sousAlbumsName.reverse().forEach(function (item, key) {
+
+                            let html = '<div class="row sousAlbum" id="idSousAlbum_' + key + '">';
+                            html += '<div class="col-xs-2 text-center">';
+                            if ((key + 1) !== maxSousAlbum) {
+                                html += '<div class="buttonSousAlbum" onclick="changePositionAlbum(' + key + ', \'down\')">' +
+                                    '<i class="fa fa-angle-down"></i>' +
+                                    '</div>';
+                            }
+                            if (key !== 0) {
+                                html += '<div class="buttonSousAlbum" onclick="changePositionAlbum(' + key + ', \'up\')">' +
+                                    '<i class="fa fa-angle-up"></i>' +
+                                    '</div>';
+                            }
+                            html += '</div>';
+                            html += '<div class="col-xs-9">';
+                            html += '<input type="text" class="sousAlbumName" name="sousAlbumName[' + key + ']" id="sousAlbumName[' + key + ']" value="' + item + '">';
+                            html += '</div>';
+                            html += '<div class="col-xs-1">';
+                            html += '<div class="buttonSousAlbum" onclick="addCommentSousAlbum(' + key + ')">' +
+                                '<i class="fa fa-paragraph"></i>' +
+                                '</div>';
+                            html += '</div>';
+                            html += '<div class="col-xs-12">';
+                            html += '<input type="text" value="' + item + '" name="sousAlbumDir[' + key + ']" class="sousAlbumDir" readonly>';
+                            html += '<input type="text" value="' + key + '" class="inputPosition" readonly>';
+                            html += '<textarea cols="30" rows="10" class="sousAlbumMessage" name="sousAlbumMessage[' + key + ']" id="sousAlbumMessage[' + key + ']"></textarea>';
+                            html += '</div>';
+                            html += '</div>';
+                            addInputSousAlbum(html);
+
+                        })
+
+
+                    });
+                });*/
+    </script>
+{% endblock %}

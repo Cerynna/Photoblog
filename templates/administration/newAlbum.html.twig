@@ -1,0 +1,316 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}{{ title }}!{% endblock %}
+
+{% block body %}
+    <div class="addAlbum">
+        <form method="post" enctype="multipart/form-data" id="addNewAlbumForm"
+              action="{{ path('administrationaddAlbum') }}">
+            <div class="content">
+                <div class="row">
+                    <div class="col-xs-11">
+                        <h2>Crée un nouvel Album</h2>
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="submitForm">
+                            <i class="fa fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row titlePage">
+                    <div class="col-xs-4">
+                        <label for="title">Nom de l'album</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label for="dateTime">Date</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label for="status">Status de l'album</label>
+                    </div>
+                </div>
+
+                <div class="row round">
+                    <div class="col-xs-4  text-center">
+                        <input type="text" name="title" id="title">
+                    </div>
+                    <div class="col-xs-4  text-center">
+                        <input type="date" name="dateTime" id="dateTime" value="{{ "now"|date('Y-m-d') }}">
+                    </div>
+                    <div class="col-xs-4  text-center">
+                        <select name="status" id="status" class="form-control">
+                            <option value="0">En attente</option>
+                            <option value="1">Publier</option>
+                            <option value="2">A la une</option>
+                            <option value="3">Privé</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row titlePage">
+                    <div class="col-xs-12">
+                        <label for="file">Choisie tes Photos</label>
+                    </div>
+
+                </div>
+
+                <div class="row round">
+                    <div class="col-xs-12  text-center">
+                        <input type="file" webkitdirectory directory multiple name="file[]" id="file">
+                    </div>
+                </div>
+
+
+                <div class="row titlePage">
+                    <div class="col-xs-11">
+                        <label for="messageAlbum">Commentaire de l'album</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="toggleMessageAlbum">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row round messageAlbum">
+                    <div class="col-xs-12  text-center ">
+                        <textarea name="messageAlbum" id="messageAlbum" cols="30" rows="10"></textarea>
+                    </div>
+                </div>
+                <div class="row titlePage">
+                    <div class="col-xs-11">
+                        <label for="messageAlbum">Selectionner la photo de couverture</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="togglePreviewAlbum">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row gallery round text-center">
+
+                </div>
+                <div class="row titlePage">
+                    <div class="col-xs-11">
+                        Sous Albums
+                    </div>
+                    <div class="col-xs-1">
+                        <div class="togglelistSousAlbum">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="listSousAlbum round">
+
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+
+        $('.toggleMessageAlbum').on('click', function (data) {
+            $('.messageAlbum').slideToggle()
+        });
+        $('.togglePreviewAlbum').on('click', function (data) {
+            $('.gallery').slideToggle()
+        });
+        $('.togglelistSousAlbum').on('click', function (data) {
+            $('.listSousAlbum').slideToggle()
+        });
+        $('.submitForm').on('click', function (data) {
+            $('form').submit();
+        });
+
+
+        function changePositionAlbum(key, operator) {
+
+            let valuePosition = parseInt($('#idSousAlbum_' + key + ' input.inputPosition').val());
+
+
+            let fromInputDir = $('#idSousAlbum_' + key + ' input.sousAlbumDir');
+            let fromInputName = $('#idSousAlbum_' + key + ' input.sousAlbumName');
+            let fromInputMessage = $('#idSousAlbum_' + key + ' textarea.sousAlbumMessage');
+
+            let fromAlbumDir = fromInputDir.val();
+            let fromAlbumName = fromInputName.val();
+            let fromAlbumMessage = fromInputMessage.val();
+
+            let newPosition = 0;
+            if (operator === "down") {
+                newPosition = valuePosition + 1;
+            }
+            if (operator === "up") {
+                newPosition = valuePosition - 1;
+            }
+            let toInputDir = $('#idSousAlbum_' + newPosition + ' input.sousAlbumDir');
+            let toInputName = $('#idSousAlbum_' + newPosition + ' input.sousAlbumName');
+            let toInputMessage = $('#idSousAlbum_' + newPosition + ' textarea.sousAlbumMessage');
+
+            let toAlbumDir = toInputDir.val();
+            let toAlbumName = toInputName.val();
+            let toAlbumMessage = toInputMessage.val();
+
+
+            fromInputDir.val(toAlbumDir);
+            fromInputName.val(toAlbumName);
+            fromInputMessage.val(toAlbumMessage);
+
+            toInputDir.val(fromAlbumDir);
+            toInputName.val(fromAlbumName);
+            toInputMessage.val(fromAlbumMessage);
+
+
+        }
+
+        function addCommentSousAlbum(key) {
+            let inputMessage = $('#idSousAlbum_' + key + ' textarea.sousAlbumMessage');
+            inputMessage.slideToggle();
+        }
+
+
+        $(function () {
+
+            let imagesPreview = function (input, placeToInsertImagePreview) {
+                if (input.files) {
+                    let filesAmount = input.files.length;
+                    let countPhotos = 0;
+                    for (let i = 0; i < filesAmount; i++) {
+                        if (!input.files[i].type.indexOf("image")) {
+
+                            let reader = new FileReader();
+                            reader.onload = function (event) {
+                                let html = '<label for="photo_' + i + '">';
+                                if (countPhotos === 0) {
+                                    html += '<input type="radio" name="miniature[]" id="photo_' + i + '" value="' + i + '" checked>';
+                                }
+                                else {
+                                    html += '<input type="radio" name="miniature[]" id="photo_' + i + '" value="' + i + '">';
+                                }
+                                html += '<img src="' + event.target.result + '" alt="" width="200px">' +
+                                    '</label>';
+                                $(placeToInsertImagePreview).append(html);
+
+                                countPhotos++;
+
+                            };
+                            reader.readAsDataURL(input.files[i]);
+                        }
+                    }
+                }
+            };
+
+            let addInputSousAlbum = function (sousAlbumName) {
+
+                $('div.listSousAlbum').append(sousAlbumName)
+
+            };
+
+
+            $('#file').on('change', function (data) {
+                $('div.gallery').html('');
+                $('div.listSousAlbum').html('');
+                imagesPreview(this, 'div.gallery');
+
+
+                let arrFiles = this.files;
+
+                class Album {
+                    constructor(name = null) {
+                        this.name = name;
+                        this.sousAlbumsName = [];
+                        this.file = []
+                    }
+
+                    addName(name) {
+                        this.name = name;
+                    }
+
+                    addFile(file) {
+                        this.file.push(file);
+                    }
+
+                    addSousAlbumsName(sousAlbum) {
+                        if (this.sousAlbumsName.indexOf(sousAlbum) < 0) {
+                            this.sousAlbumsName.push(sousAlbum);
+                        }
+                    }
+
+                    addSousAlbums(sousAlbum, file) {
+                        this.addSousAlbumsName(sousAlbum);
+                    }
+                }
+
+                let albumEntity = new Album();
+                for (let idFile in arrFiles) {
+                    if ($.isNumeric(idFile)) {
+                        if (arrFiles[idFile].webkitRelativePath !== undefined) {
+                            let fileSplit = arrFiles[idFile].webkitRelativePath.split('/');
+                            if (fileSplit.length === 2) {
+                                albumEntity.addName(fileSplit[0]);
+                                albumEntity.addFile(arrFiles[idFile].webkitRelativePath);
+                            }
+                            if (fileSplit.length === 3) {
+                                albumEntity.addSousAlbums(fileSplit[1], fileSplit[2]);
+                                albumEntity.addFile(arrFiles[idFile].webkitRelativePath);
+                            }
+                        }
+                    }
+                }
+
+                if ($('#title').val() === "") {
+
+                    $('#title').val(albumEntity.name);
+                }
+
+
+                let maxSousAlbum = albumEntity.sousAlbumsName.length;
+
+
+                console.log(albumEntity);
+
+                $('div.listSousAlbum').append('<textarea name="arrFiles" class="arrFiles">' + JSON.stringify(albumEntity.file) + '</textarea>')
+
+                albumEntity.sousAlbumsName.reverse().forEach(function (item, key) {
+
+                    let html = '<div class="row sousAlbum" id="idSousAlbum_' + key + '">';
+                    html += '<div class="col-xs-2 text-center">';
+                    if ((key + 1) !== maxSousAlbum) {
+                        html += '<div class="buttonSousAlbum" onclick="changePositionAlbum(' + key + ', \'down\')">' +
+                            '<i class="fa fa-angle-down"></i>' +
+                            '</div>';
+                    }
+                    if (key !== 0) {
+                        html += '<div class="buttonSousAlbum" onclick="changePositionAlbum(' + key + ', \'up\')">' +
+                            '<i class="fa fa-angle-up"></i>' +
+                            '</div>';
+                    }
+                    html += '</div>';
+                    html += '<div class="col-xs-9">';
+                    html += '<input type="text" class="sousAlbumName" name="sousAlbumName[' + key + ']" id="sousAlbumName[' + key + ']" value="' + item + '">';
+                    html += '</div>';
+                    html += '<div class="col-xs-1">';
+                    html += '<div class="buttonSousAlbum" onclick="addCommentSousAlbum(' + key + ')">' +
+                        '<i class="fa fa-paragraph"></i>' +
+                        '</div>';
+                    html += '</div>';
+                    html += '<div class="col-xs-12">';
+                    html += '<input type="text" value="' + item + '" name="sousAlbumDir[' + key + ']" class="sousAlbumDir" readonly>';
+                    html += '<input type="text" value="' + key + '" class="inputPosition" readonly>';
+                    html += '<textarea cols="30" rows="10" class="sousAlbumMessage" name="sousAlbumMessage[' + key + ']" id="sousAlbumMessage[' + key + ']"></textarea>';
+                    html += '</div>';
+                    html += '</div>';
+                    addInputSousAlbum(html);
+
+                })
+
+
+            });
+        });
+    </script>
+{% endblock %}

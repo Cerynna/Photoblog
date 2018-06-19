@@ -1,0 +1,263 @@
+{% extends 'baseAdmin.html.twig' %}
+{% import "default/macros/status.html.twig" as status %}
+{% block title %}{{ title }}!{% endblock %}
+
+{% block body %}
+    <div class="album">
+        {% if albumsWaiting is not empty %}
+        <h2>En Attente</h2>
+        <div class="content waitingAlbums">
+            <div class="row">
+                {% for album in albumsWaiting %}
+                    <div class="col-xs-12" id="Album_{{ album.id }}">
+                        <div class="row round">
+                            <div class="col-md-2 text-center">
+                                <a href="{{ path('album', { 'dir': album.dir }) }}" target="_blank">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="{{ path('administrationeditAlbum', { 'id': album.id }) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a class="changeStatus" data-idAlbum="{{ album.id }}">
+                                    {{ status.statusIcon(album.status) }}
+                                </a>
+                                <a class="albumTrash" href="#" data-idAlbum="{{ album.id }}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </div>
+                            <div class="col-md-7">
+                                {{ album.name|slice(0,40) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ album.date|date('M Y') }}
+                            </div>
+
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+
+        <h2>En ligne</h2>
+        <div class="content onlineAlbums">
+            <div class="grid row">
+                {% for album in albumsOnLine %}
+                    <div class="item col-xs-12" id="Album_{{ album.id }}" data-position="{{ album.position }}">
+                        <div class="item-content row round {% if album.status == 2 %}atOne{% endif %}">
+                            <div class="col-md-2 text-center">
+                                <a href="{{ path('album', { 'dir': album.dir }) }}" target="_blank">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="{{ path('administrationeditAlbum', { 'id': album.id }) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a class="changeStatus" data-idAlbum="{{ album.id }}">
+                                    {{ status.statusIcon(album.status) }}
+                                </a>
+                                <a class="albumTrash" href="#" data-idAlbum="{{ album.id }}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </div>
+                            <div class="col-md-7">
+                                {{ album.name|slice(0,40) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ album.date|date('M Y') }}
+                            </div>
+
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <h2>Albums Privé</h2>
+
+        <div class="content ghostAlbums">
+            <div class="row">
+                {% for album in albumsGhost %}
+                    <div class=" col-xs-12" id="Album_{{ album.id }}">
+                        <div class="row round">
+                            <div class="col-md-2 text-center">
+                                <a href="{{ path('album', { 'dir': album.dir }) }}" target="_blank">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="{{ path('administrationeditAlbum', { 'id': album.id }) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a class="changeStatus" data-idAlbum="{{ album.id }}">
+                                    {{ status.statusIcon(album.status) }}
+                                </a>
+                                <a class="albumTrash" href="#" data-idAlbum="{{ album.id }}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+
+                            </div>
+                            <div class="col-md-7">
+                                {{ album.name|slice(0,40) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ album.date|date('M Y') }}
+                            </div>
+
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="changeStatusForm">
+            <div class="row">
+                <div class="col-xs-6 text-left">
+                    <i data-status="1" class="fa fa-flag-o"></i>
+                    <i data-status="2" class="fa fa-flag"></i>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <i data-status="0" class=" fa fa-clipboard"></i>
+                    <i data-status="3" class="fa fa-snapchat-ghost"></i>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+
+
+        $('.changeStatus').on('click', function (e) {
+            let idAlbum = this.getAttribute('data-idAlbum');
+
+            $('.changeStatusForm').css({
+                'top': e.pageY - 100 + 'px',
+                'left': e.pageX - 10 + 'px',
+                'display': 'block'
+            }).data('idAlbum', idAlbum);
+        });
+
+        $('.changeStatusForm').on('click', function (e) {
+            $.ajax({
+                type: 'POST',
+                data: {
+                    status: $(e.target).data('status'),
+                    idAlbum: $(e.currentTarget).data('idAlbum'),
+                },
+                url: "/ajax/changeStatus",
+                dataType: 'json',
+                timeout: 2000,
+                success: function (response) {
+                    location.reload();
+                },
+                error: function () {
+
+                }
+            })
+
+
+        });
+        $('.changeStatusForm').on('mouseleave', function (e) {
+            $(this).css({
+                'display': 'none'
+            })
+
+        });
+
+        let grid = new Muuri('.grid', {
+            dragEnabled: true,
+            sortData: {
+                position: function (item, element) {
+                    return parseFloat(element.getAttribute('data-position'));
+                }
+            }
+        });
+        /*// Refresh sort data whenever an item's data-position or data-bar changes
+        grid.refreshSortData();
+        // Sort the grid by position and bar.
+        grid.sort('position');*/
+
+
+        grid.on('move', function (data) {
+            let operator = data.fromIndex - data.toIndex;
+            let position = data.item._element.getAttribute("data-position");
+
+            AjaxPosition(position, operator);
+
+        });
+
+        grid.on('dragStart', function (item, event) {
+            let idAlbum = item._element.getAttribute('id');
+            $("#" + idAlbum + " .round").css('box-shadow', '2px 2px 2px 1px rgba(0, 0, 0, 0.35)')
+        });
+        grid.on('dragEnd', function (item, event) {
+            let idAlbum = item._element.getAttribute('id');
+            $("#" + idAlbum + " .round").css('box-shadow', 'none')
+        });
+
+
+        function AjaxPosition(position, operator) {
+
+            $.ajax({
+                type: 'POST',
+                data: {
+                    position: position,
+                    operator: operator,
+                },
+                url: "/ajax/positionAlbum",
+                dataType: 'json',
+                timeout: 2000,
+                success: function (response) {
+                    for (let key in response) {
+                        $('#Album_' + key).attr('data-position', response[key]);
+
+                    }
+                },
+                error: function () {
+
+                }
+            })
+
+
+        }
+
+        $('.albumTrash').click(function () {
+
+
+            let idAlbum = $(this).data('idalbum');
+            if (confirm("Tu va supprimer un album tu es sur ?")) {
+
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        data: idAlbum
+                    },
+                    url: "/ajax/deleteAlbum",
+                    dataType: 'json',
+                    timeout: 2000,
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function () {
+
+                    }
+                })
+
+            }
+
+
+        })
+
+
+    </script>
+{% endblock %}

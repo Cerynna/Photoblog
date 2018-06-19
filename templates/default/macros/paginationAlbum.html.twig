@@ -1,0 +1,23 @@
+{% set idPrevious = "" %}
+    {% set idNext = "" %}
+
+    {% set keyPrevious = "" %}
+    {% set keyNext = "" %}
+
+
+    {% for albumPagi in albums %}
+        {% if album.0.id == albumPagi.id %}
+            {% set keyPrevious = loop.index0 - 1 %}
+            {% set keyNext = loop.index0 + 1 %}
+
+        {% endif %}
+    {% endfor %}
+
+    {% for albumPagi in albums %}
+        {% if keyPrevious == loop.index0 %}
+            {% set idPrevious = albumPagi.id %}
+        {% endif %}
+        {% if keyNext == loop.index0 %}
+            {% set idNext = albumPagi.id %}
+        {% endif %}
+    {% endfor %}

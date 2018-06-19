@@ -1,0 +1,74 @@
+<div class="navbar navbar-fixed-top" id="navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="" href="{{ path('home') }}"><h1>Patricia - Marcy Photo Club</h1></a>
+        </div>
+        <ul class="nav navbar-nav navbar-right hidden-xs hidden-sm hidden-md">
+            <li class="active">
+                <a class="js-scrollTo anchor hidden-xs hidden-sm hidden-md"
+                   href="{{ path('home') }}{% if app.request.pathInfo == "/" %}#top{% endif %}" id="menu-top">
+                    Home
+                </a>
+            </li>
+            <li>
+
+
+                <a class="js-scrollTo anchor hidden-xs hidden-sm hidden-md"
+                   href="{{ path('home') }}{% if app.request.pathInfo == "/" %}#aLaUne{% endif %}"
+                   id="menu-aLaUne">
+                    A la une
+                </a>
+            </li>
+            <li>
+                <a class="js-scrollTo anchor hidden-xs hidden-sm hidden-md"
+                   href="{{ path('home') }}{% if app.request.pathInfo == "/" %}#album{% endif %}"
+                   id="menu-album">
+                    Albums
+                </a>
+            </li>
+            <li>
+                <a class="js-scrollTo anchor hidden-xs hidden-sm hidden-md"
+                   href="{{ path('home') }}{% if app.request.pathInfo == "/" %}#newLetter{% endif %}"
+                   id="menu-newLetter">
+                    Newletter
+                </a>
+            </li>
+            <li>
+                <a class="js-scrollTo anchor  hidden-xs hidden-sm hidden-md"
+                   href="{{ path('home') }}{% if app.request.pathInfo == "/" %}#footer{% endif %}"
+                   id="menu-footer">
+                    <i class="fa fa-envelope"></i>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right hidden-lg">
+            <li class="active">
+                <a class="js-scrollTo anchor hidden-lg" href="{{ path('home') }}#top" id="menu-top">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li>
+                <a class="js-scrollTo anchor hidden-lg" href="{{ path('home') }}#aLaUne" id="menu-aLaUne">
+                    <i class="fa fa-lightbulb-o"></i>
+                </a>
+            </li>
+            <li>
+                <a class="js-scrollTo anchor hidden-lg" href="{{ path('home') }}#album" id="menu-album">
+                    <i class="fa fa-picture-o"></i>
+                </a>
+            </li>
+            <li>
+                <a class="js-scrollTo anchor hidden-lg" href="{{ path('home') }}#newLetter" id="menu-newLetter">
+                    <i class="fa fa-inbox"></i>
+                </a>
+            </li>
+            <li>
+                <a class="js-scrollTo anchor hidden-lg" href="{{ path('home') }}#footer" id="menu-newLetter">
+                    <i class="fa fa-envelope"></i>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>

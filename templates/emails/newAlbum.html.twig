@@ -1,0 +1,102 @@
+{% extends 'baseAdmin.html.twig' %}
+{% block body %}
+    <div class="menuAdmin" data-aos="zoom-in">
+        <ul>
+            <li>
+                <a href="" onclick="window.history.back();return false;"><i
+                            class="glyphicon glyphicon-chevron-left"></i></a>
+            </li>
+            <li>
+                <i class="glyphicon glyphicon-ok" onclick="document.sendMail.submit();"></i>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                    Quel type de mail veu tu envoyer ?
+                </button>
+                <ul class="dropdown-menu">
+                    <li onclick='$(".newAlbum").removeClass("hidden");$(".newMail").addClass("hidden");'>Nouvel Album
+                    </li>
+                    <li onclick='$(".newMail").removeClass("hidden");$(".newAlbum").addClass("hidden");'>Ecrire un
+                        mail
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+    </div>
+    <div class="row newAlbum hidden">
+        <form name="sendMail" action="{{ path('testMail',{ id: '@idAlbum' } ) }}" method="post">
+            <div class="col-md-12">
+                <h4>Pour quel album veux tu envoyer un mail ?</h4>
+            </div>
+            <div class="col-md-6">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                        Album
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for album in albums %}
+                            <li onclick='showNewAlbumMail("{{ album.id }}","{{ album.name }}")'
+                                value="{{ album.id }}">{{ album.name }}</li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <input type="text" id="album" disabled="disabled" class="form-control">
+            </div>
+            <div class="col-md-12">
+                <textarea class="form-control" id="content" rows="30"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label>Preview du Mail</label>
+                <div class="col-md-12" id="preview"></div>
+            </div>
+
+        </form>
+    </div>
+    <div class="row newMail hidden">
+        Mail Basic
+    </div>
+    <script>
+
+
+        function showNewAlbumMail(id, name) {
+            document.getElementById("album").value = name;
+            let text =
+                "<div class=\"container\">\n" +
+                "<div class=\"content\">\n" +
+                "<h3>Un nouvel Album viens d'etre ajouté !</h3>\n" +
+                "<h4>Bonjour,</h4>\n" +
+                "<p>\n" +
+                "Je viens de mettre en ligne un nouvelle album sur mon site.\n" +
+                "<h2><a target=\"_blank\" href=\"{{ url('album', { id_album: '@idAlbum' }) }}\">" + name + "</a></h2>\n" +
+                "</p>\n" +
+                "</div>\n" +
+
+
+                "<a target=\"_blank\" href=\"{{ url('homepage') }}\">Accueil du site</a> | " +
+                "<a target=\"_blank\" href=\"{{ url('homepage') }}\">Se désinscrire de la newsletter</a>" +
+                "</div>\n";
+            document.getElementById("content").value = text.replace("@idAlbum", id);
+
+            let align = document.sendMail.getAttribute("action");
+            let linkAction = align.replace("@idAlbum", id);
+            document.sendMail.setAttribute('action', linkAction);
+
+        }
+
+
+        let wpcomment = document.getElementById('content');
+
+        wpcomment.onkeyup = wpcomment.onkeypress = wpcomment.onfocus = function () {
+            document.getElementById('preview').innerHTML = this.value;
+        }
+    </script>
+{% endblock %}

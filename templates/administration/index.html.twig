@@ -1,0 +1,53 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}{{ title }}!{% endblock %}
+
+{% block body %}
+    <div class="album">
+            <div class="content">
+                INDEX ADMIN<br/>
+                Ajouter un Album avec un Zip
+                <h4>TODO LIST</h4>
+                <ul>
+                    <li><s>Add Album</s>
+                        <ul>
+                            <li><s>* Info Album</s></li>
+                            <li><s>add SousAlbum</s></li>
+                            <li><s>add Photo</s></li>
+                        </ul>
+                    </li>
+                    <li><s>DELETE Album</s>
+                        <ul>
+                            <li><s>SET Null Miniature to album</s></li>
+                            <li><s>Delete Photo from Album</s></li>
+                            <li><s>Delete Photo from SousAlbum</s></li>
+                            <li><s>Delete SouSAlbum From Album</s></li>
+                            <li><s>Delete Album</s></li>
+                        </ul>
+                    </li>
+                    <li>UPDATE Album
+                        <ul>
+                            <li>Name</li>
+                            <li>Date Time</li>
+                            <li>Miniature</li>
+                            <li>Status</li>
+                            <li>Message</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        /*        $('button').click(function () {
+                    let data = $('form').serializeArray();
+                    console.log(data);
+                })*/
+
+
+    </script>
+{% endblock %}

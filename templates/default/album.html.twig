@@ -1,0 +1,321 @@
+{% extends 'base.html.twig' %}
+{% block title %}Home{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/lightgallery.css') }}">
+{% endblock %}
+{% block body %}
+    {% import "default/macros/randomAOS.html.twig" as randomAOS %}
+
+    {% if album["nextAlbum"] != "" %}
+        <a href="{{ album["nextAlbum"] }}">
+            <div class="album-next"><i class="glyphicon glyphicon-chevron-left"></i></div>
+        </a>
+    {% endif %}
+    {% if album["prevAlbum"]  != "" %}
+        <a href="{{ album["prevAlbum"] }}">
+            <div class="album-previous"><i class="glyphicon glyphicon-chevron-right"></i></div>
+        </a>
+    {% endif %}
+
+    <div class="album" id="#top">
+        <div class="menuAlbum" data-aos="zoom-in">
+            <ul>
+                <a href="#top" class="fuildScroll toTop">
+                    <li><i class="glyphicon glyphicon-picture"></i></li>
+                </a>
+                <a href="#comment" class="fuildScroll toComment">
+                    <li><i class="glyphicon glyphicon-comment"></i></li>
+                </a>
+                <a href="#writeComment" class="fuildScroll toWrite">
+                    <li><i class="glyphicon glyphicon-pencil"></i></li>
+                </a>
+            </ul>
+        </div>
+        <div class="bgimg-2"
+             style="background: url('{{ asset("albums/" ~ album["album"].imageMiniature.image) }}') center fixed; background-size: cover;">
+            <div class="caption-main">
+                <span class="border">{{ album["album"].name }}</span>
+            </div>
+
+        </div>
+
+        <div class="container">
+            <h1></h1>
+            <div class="content" data-aos="fade-right">
+                {#<div style="background: url('{{ asset("albums/" ~ album["album"].imageMiniature.image) }}') center no-repeat; background-size: cover;"
+                     class="press">
+
+                </div>#}
+                <p>
+                    {{ album["album"].message|nl2br }}
+                </p>
+                <div class="row">
+                    <ul id="lightgallery">
+                        {% for photo in album["album"].photos %}
+                            <li class="item" data-aos="{{ randomAOS.randomAOS }}"
+                                data-src="{{ asset("albums/" ~ photo.image) }}">
+                                <a href="">
+
+                                    <img src="{{ asset("albums/" ~ photo.image) }}"
+                                         class=" img-responsive img-rounded album-mini">
+                                </a>
+                            </li>
+                        {% endfor %}
+                        {% for sousAlbum in album["album"].sousAlbums %}
+                            <div class="col-md-12 col-sm-12 text-center"><h4>{{ sousAlbum.name }}</h4></div>
+                            <p class="col-md-12 col-sm-12 text-center">
+                                {{ sousAlbum.message|nl2br }}
+                            </p>
+                            {% for photo in sousAlbum.photos %}
+                                <li class="item" data-aos="{{ randomAOS.randomAOS }}"
+                                    data-src="{{ asset("albums/" ~ photo.image) }}">
+                                    <a href="">
+                                        <img src="{{ asset("albums/" ~ photo.image) }}"
+                                             class="img-responsive img-rounded album-mini">
+                                    </a>
+                                </li>
+
+                            {% endfor %}
+
+
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="bgimg-2"
+             style="background: url('{{ asset("albums/" ~ album["album"].imageMiniature.image) }}') center fixed; background-size: cover;">
+            <div class="caption">
+
+            </div>
+        </div>
+
+        <div class="container">
+            <span class="ancres" id="comment"></span>
+            <h2>Commentaire</h2>
+
+            <div class="content" data-aos="fade-left">
+
+                <div id="comments">
+                    {% if album["album"].comments is empty %}
+                        <div class="comment">
+                            <p>
+                                Il n'y as pas de commentaire pour cet Album.
+                            </p>
+                        </div>
+                    {% endif %}
+                    {% for comment in album["album"].comments %}
+                        <div class="comment">
+                            <div class="auteur">{{ comment.name }}</div>
+                            <div class="date">{{ comment.date|date("d/m/Y") }}</div>
+                            <p>
+                                {{ comment.message|nl2br }}
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="bgimg-2"
+             style="background: url('{{ asset("albums/" ~ album["album"].imageMiniature.image) }}') center fixed; background-size: cover;">
+            <div class="caption">
+
+            </div>
+        </div>
+        <div class="container">
+            <h2>Ecrire un Commentaire</h2>
+            <div class="content" data-aos="fade-right" id="writeComment">
+                <form role="form" class="row">
+                    <div class="col-md-6" id="inputName">
+                        <label for="name">Nom & Prénom : </label>
+                        <input type="text" name="name" id="name" value="Hystérias">
+                        <div class="error"></div>
+                    </div>
+                    <div class="col-md-6" id="inputEmail">
+                        <label for="email">Email : </label>
+                        <input type="text" name="email" id="email" value="test@gmail.com">
+                        <div class="error"></div>
+                    </div>
+                    <div class="col-md-12" id="inputMessage">
+                        <label for="message">Message : </label>
+                        <textarea class="form-control" name="message" id="message">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti enim fuga, laboriosam nemo nesciunt quidem rerum saepe sint ut. Asperiores cupiditate eius eligendi id natus optio praesentium tempore vero voluptates!</textarea>
+                        <div class="error"></div>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <div class="btn" id="submit"><i class="glyphicon glyphicon-ok"></i></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
+
+    <script>AOS.init();</script>
+    <script>
+        $('.navbar').addClass("scrolled");
+        $(".active").removeClass("active");
+        $("#menu-album").addClass("active");
+
+    </script>
+
+    <!-- lightgallery plugins -->
+    <script src="{{ asset('js/lightgallery.js') }}"></script>
+
+    <script src="{{ asset('js/lg-thumbnail.js') }}"></script>
+    <script src="{{ asset('js/lg-fullscreen.js') }}"></script>
+    <script src="{{ asset('js/lg-autoplay.js') }}"></script>
+    <script src="{{ asset('js/lg-zoom.js') }}"></script>
+    <script>
+        var $lightgallery = $('#lightgallery');
+        $lightgallery.lightGallery({
+            selector: '.item',
+            download: false,
+            mode: 'lg-fade',
+            autoplay: true,
+            pause: 4000,
+            progressBar: false,
+            fourceAutoplay: true,
+            autoplayControls: true,
+            fullScreen: true,
+            appendAutoplayControlsTo: '.lg-toolbar'
+        });
+        var data = $lightgallery.data('lightGallery');
+
+        $lightgallery.on('onBeforeSlide.lg', function (event, prevIndex, index) {
+            var img = data.$items.eq(index).attr('data-src');
+
+            /*$("body").addClass("testFond");*/
+            $('.lg-backdrop').css('background', 'url(' + img + ') center');
+            $('.lg-backdrop').css('background-size', 'cover');
+
+        });
+
+        $(document).ready(function () {
+            $(".fuildScroll").on('click', function (event) {
+                if (this.hash !== "") {
+                    event.preventDefault();
+                    var hash = this.hash;
+                    $('html, body').animate({
+                        scrollTop: $(hash).offset().top
+                    }, 800, function () {
+                        window.location.hash = hash;
+                    });
+                }
+            });
+
+            $('form #submit').click(function (e) {
+                let data = $('form').serializeArray();
+                console.log(data);
+                console.log("CLIKER");
+                AjaxComment(data, {{ album["album"].id }});
+
+
+            })
+
+
+        });
+
+        function AjaxComment(data, idAlbum) {
+            if (VerifForm(data)) {
+                data.push({"name": "album", "value": idAlbum})
+                console.log(data);
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        data: data
+                    },
+                    url: "/ajax/comment",
+                    dataType: 'json',
+                    timeout: 2000,
+                    success: function (response) {
+
+
+                        let div = document.getElementById('comments');
+
+                        div.innerHTML = '<div class="comment">\n' +
+                            '<div class="auteur">' + response.name + '</div>\n' +
+                            '<div class="date">' + response.date + '</div>\n' +
+                            '<p>\n' +
+                            response.message +
+                            '</p>\n' +
+                            '</div>' + div.innerHTML;
+                        formReset();
+                        $('.menuAlbum .toComment').click();
+
+                    },
+                    error: function () {
+
+                    }
+                })
+
+
+            }
+        }
+
+        function formReset() {
+            $('form #name').val("");
+            $('form #email').val("");
+            $('form #message').val("");
+        }
+
+        function VerifForm(data) {
+            let error = 0;
+            data.map(function (item) {
+                switch (item.name) {
+                    case "name":
+                        if (item.value.length < 3) {
+                            $('#inputName .error').html("Ton nom est trop court il faut plus de 3 caractère.")
+                                .fadeIn(500)
+                                .delay(2000)
+                                .fadeOut(200);
+                            error++;
+                        }
+                        break;
+                    case "email":
+                        if (!validateEmail(item.value)) {
+
+                            $('#inputEmail .error').html("Ton Email n'est pas valide.")
+                                .fadeIn(500)
+                                .delay(2000)
+                                .fadeOut(200);
+                            error++;
+                        }
+                        break;
+                    case "message":
+                        if (item.value.length < 3) {
+                            $('#inputMessage .error').html("Trop court il faut plus de 3 caractère.")
+                                .fadeIn(500)
+                                .delay(2000)
+                                .fadeOut(200);
+                            error++;
+                        }
+                        break;
+                }
+
+
+            });
+
+            return (error > 0) ? false : true;
+
+
+        }
+
+        function validateEmail(email) {
+            let re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            return re.test(email);
+        }
+
+    </script>
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,38 @@
+easy_admin:
+    design:
+        brand_color: '#1ABC9C'
+    entities:
+        # List the entity class name you want to manage
+        Photos:
+            class: App\Entity\Photo
+            list:
+                fields:
+                    - { property: 'album'}
+                    - { property: 'sousAlbum'}
+                    - { property: 'image', template: 'vich_uploader_image.html.twig' }
+            form:
+                fields:
+                    - { property: 'messages', type: 'text' }
+                    - { property: 'position'}
+                    - { property: 'album'}
+                    - { property: 'sousAlbum'}
+                    - { property: 'imageFile', type: 'file' }
+        Albums:
+            class: App\Entity\Album
+        SousAlbums:
+            class: App\Entity\SousAlbum
+        Backgroung:
+            class: App\Entity\Background
+            list:
+            fields:
+                - {property: 'photo', template: 'vich_uploader_image.html.twig' }
+#        Production:
+#            class: App\Entity\Production
+#            list:
+#                fields:
+#                    - { property: 'name', type: 'text' }
+#                    - { property: 'link', type: 'text' }
+#                    - { property: 'image', template: 'easyAdmin/imageadmin.html.twig' }
+#
+#        - App\Entity\Category
+#        - App\Entity\User

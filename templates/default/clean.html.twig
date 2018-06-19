@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+{% block title %}Home{% endblock %}
+{% block body %}
+
+
+    <div class="home">
+        <div class="bgimg-1" style="">
+            <div class="caption-main" data-aos="zoom-in">
+                <span class="border">Projet Photo</span>
+                <a class="js-scrollTo" href="{{ path('home') }}#aLaUne" onclick="changeAnchor('aLaUne')">
+                    <div class="pulse-button"><i class="fa fa-angle-down"></i></div>
+                </a>
+            </div>
+        </div>
+
+        <span class="ancres" id="aLaUne"></span>
+        <div class="container">
+            <h2>Titre</h2>
+            <div class="content">
+                Contenue
+            </div>
+        </div>
+        <div class="bgimg-2" style="">
+            <div class="caption">
+                <a class="js-scrollTo" href="{{ path('home') }}#album" onclick="changeAnchor('album')">
+                    <div class="pulse-button"><i class="fa fa-angle-down"></i></div>
+                </a>
+            </div>
+        </div>
+        <span class="ancres" id="album"></span>
+        <div class="container">
+
+        </div>
+
+        <div class="bgimg-3" style="">
+            <div class="caption">
+                <a class="js-scrollTo" href="{{ path('home') }}#newLetter" onclick="changeAnchor('newLetter')">
+                    <div class="pulse-button"><i class="fa fa-angle-down"></i></div>
+                </a>
+            </div>
+        </div>
+        <span class="ancres" id="newLetter"></span>
+        <div class="container">
+            <h2 id="">Newletter</h2>
+            <div class="content newLetter">
+                <p>
+                    {# {{ form_start(form, {'attr': {'class': "form-inline"}  }) }}
+
+                     {{ form_widget(form.type, {'attr': {'class': "hidden"}  }) }}
+
+                     {{ form_widget(form.email, {'attr': {'class': "form-group",
+                         'placeholder': 'Votre email'}  }) }}
+                     {{ form_errors(form.email) }}
+                     <button type="submit" value=""><i class="glyphicon glyphicon-ok"></i></button>
+                     {{ form_end(form) }}#}
+                </p>
+            </div>
+        </div>
+
+        <div class="bgimg-1" style="">
+            <div class="caption">
+                <a class="js-scrollTo" href="{{ path('home') }}#footer" onclick="changeAnchor('footer')">
+                    <div class="pulse-button"><i class="fa fa-angle-down"></i></div>
+                </a>
+            </div>
+            <div class="caption-main">
+                <a class="js-scrollTo" href="{{ path('home') }}#top" onclick="changeAnchor('top')">
+                    <div class="pulse-button"><i class="fa fa-angle-up"></i></div>
+                </a>
+                <span class="border cursor" data-toggle="modal" data-target="#basicModal">Me Contacter</span>
+            </div>
+        </div>
+        <span class="ancres" id="footer"></span>
+        <div class="container">
+            <h2 id="">Footer</h2>
+        </div>
+
+        <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Basic Modal</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Modal Body</h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+    <script src="{{ asset('js/main.js') }}"></script>
+{% endblock %}
+

@@ -1,0 +1,7 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        albums:
+            uri_prefix: /albums
+            upload_destination: '%kernel.project_dir%/public/albums'
