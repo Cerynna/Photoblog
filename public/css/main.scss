@@ -1125,10 +1125,16 @@ button {
   .messageAlbum {
     display: none;
   }
-  .listComment{
-    display:none;
+  .listComment {
+    display: none;
   }
-  .modalUploadPhoto{
+  .commentAdmin {
+    display: none;
+    position: absolute;
+    width: 600px;
+    z-index: 2000;
+  }
+  .modalUploadPhoto {
 
     display: none;
     position: absolute;
@@ -1141,10 +1147,10 @@ button {
     z-index: 2000;
     box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.38);
 
-    input[type="file"]{
+    input[type="file"] {
       display: none;
     }
-    label[for="inputFile"]{
+    label[for="inputFile"] {
       cursor: pointer;
       background: rgba(40, 46, 52, 1);
       color: #FFF;
@@ -1158,7 +1164,7 @@ button {
       -o-transition: all 0.4s ease-out;
       -ms-transition: all 0.4s ease-out;
       transition: all 0.4s ease-out;
-      &:hover{
+      &:hover {
         background: #FFF;
         color: rgba(40, 46, 52, 1);
         border: 5px solid rgba(40, 46, 52, 1);
@@ -1217,7 +1223,7 @@ button {
       border: 10px solid rgb(55, 99, 105);
     }
   }
-  .titlePage {
+  .titlePage, .titleComment {
     color: #FFF;
     background-color: rgba(40, 46, 52, 1);
     text-align: center;
@@ -1255,5 +1261,96 @@ button {
 
     }
 
+  }
+}
+
+.modalSelectBack {
+  display: none;
+  img {
+    max-height: 85vh;
+    max-width: 75vw;
+  }
+  &.body {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    min-height: 100vh;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.65);
+
+    .content {
+      margin: 5vh auto;
+      width: 80vw;
+      max-height: 90vh;
+      background: #FFF;
+      overflow: hidden;
+      overflow-y: scroll;
+      .chosePhoto {
+        display: none;
+        .menuListPhoto {
+          position: fixed;
+
+          width: 75vh;
+          z-index: 3000;
+          .row {
+            color: #FFF;
+            background-color: rgba(40, 46, 52, 1);
+            text-align: center;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            padding: 5px 0;
+            margin: 2px 5px;
+          }
+          .returnListAlbums {
+
+          }
+        }
+        .listPhoto {
+          padding-top: 50px;
+          img {
+            max-width: 100%;
+            border: none;
+            margin-bottom: 30px;
+            &.selected {
+              border: 10px solid rgb(55, 99, 105);
+            }
+            &.thisPhoto{
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .listAlbums{
+        display: inline;
+        text-align: center;
+        .selectAlbum {
+          float: left;
+          color: #FFF;
+          background-color: rgba(40, 46, 52, 1);
+          border: 5px solid rgba(40, 46, 52, 1);
+          text-align: center;
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 5px;
+          font-size: 1.1em;
+          padding: 5px 10px;
+          width: 30%;
+          height: 5vh;
+          margin: 2px 5px;
+          cursor: pointer;
+          overflow: hidden;
+          line-height: 4vh;
+          &:hover{
+            color: rgba(40, 46, 52, 1);
+            background-color: #FFF;
+            border: 5px solid rgba(40, 46, 52, 1);
+          }
+        }
+      }
+
+
+    }
   }
 }

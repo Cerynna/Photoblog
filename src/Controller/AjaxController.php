@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Album;
 use App\Entity\Comment;
+use App\Entity\Config;
 use App\Entity\Photo;
 use App\Entity\SousAlbum;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,6 +17,74 @@ use Symfony\Component\Routing\Annotation\Route;
 class AjaxController extends Controller
 {
 
+    /**
+     * @param Request $request
+     * @Route("/ajax/getAlbumPhoto",name="getAlbumPhoto")
+     * @return JsonResponse
+     */
+    public function getAlbumPhoto(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+
+            $idAlbum = $request->get('idAlbum');
+
+            $album = $this->getDoctrine()->getRepository(Album::class)->findOneBy(['id' => $idAlbum]);
+
+
+            $result = [];
+
+            if ($album->getPhotos() !== null) {
+                /** @var Photo $photo */
+                foreach ($album->getPhotos() as $photo) {
+                    $result[] = [
+                        'name' => $photo->getImage(),
+                        'id' => $photo->getId()
+                    ];
+                }
+            }
+            if ($album->getSousAlbums() !== null) {
+                /** @var SousAlbum $sousAlbum */
+                foreach ($album->getSousAlbums() as $sousAlbum) {
+                    foreach ($sousAlbum->getPhotos() as $photo) {
+                        $result[] = [
+                            'name' => $photo->getImage(),
+                            'id' => $photo->getId()
+                        ];
+                    }
+                }
+            }
+
+
+            return new JsonResponse($result);
+        }
+    }
+
+
+    /**
+     * @param Request $request
+     * @Route("/ajax/changeBackground",name="changeBackground")
+     * @return JsonResponse
+     */
+    public function changeBackground(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+
+
+
+            $name = $request->get('name');
+            /** @var Config $config */
+            $config = $this->getDoctrine()->getRepository(Config::class)->findOneBy(['name' => $name]);
+
+            $idPhoto = $request->get('idPhoto');
+            /** @var Photo $photo */
+            $photo = $this->getDoctrine()->getRepository(Photo::class)->findOneBy(['id' => $idPhoto]);
+
+            $config->setValue($photo->getId());
+            $this->getDoctrine()->getManager()->flush();
+
+            return new JsonResponse([$photo->getImage(), $config->getName()]);
+        }
+    }
 
     /**
      * @param Request $request

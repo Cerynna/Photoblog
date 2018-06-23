@@ -5,45 +5,66 @@
 {% block body %}
     <div class="album">
         {% if albumsWaiting is not empty %}
-        <h2>En Attente</h2>
-        <div class="content waitingAlbums">
-            <div class="row">
-                {% for album in albumsWaiting %}
-                    <div class="col-xs-12" id="Album_{{ album.id }}">
-                        <div class="row round">
-                            <div class="col-md-2 text-center">
-                                <a href="{{ path('album', { 'dir': album.dir }) }}" target="_blank">
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                                <a href="{{ path('administrationeditAlbum', { 'id': album.id }) }}">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                                <a class="changeStatus" data-idAlbum="{{ album.id }}">
-                                    {{ status.statusIcon(album.status) }}
-                                </a>
-                                <a class="albumTrash" href="#" data-idAlbum="{{ album.id }}">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                            </div>
-                            <div class="col-md-7">
-                                {{ album.name|slice(0,40) }}
-                            </div>
-                            <div class="col-md-3">
-                                {{ album.date|date('M Y') }}
-                            </div>
+            <h2>En Attente</h2>
+            <div class="content waitingAlbums">
+                <div class="row">
+                    {% for album in albumsWaiting %}
+                        <div class="col-xs-12" id="Album_{{ album.id }}">
+                            <div class="row round">
+                                <div class="col-md-2 text-center">
+                                    <a href="{{ path('album', { 'dir': album.dir }) }}" target="_blank">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('administrationeditAlbum', { 'id': album.id }) }}">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a class="changeStatus" data-idAlbum="{{ album.id }}">
+                                        {{ status.statusIcon(album.status) }}
+                                    </a>
+                                    <a class="albumTrash" href="#" data-idAlbum="{{ album.id }}">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                                <div class="col-md-7">
+                                    {{ album.name|slice(0,40) }}
+                                </div>
+                                <div class="col-md-3">
+                                    {{ album.date|date('M Y') }}
+                                </div>
 
 
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
         {% endif %}
 
 
         <h2>En ligne</h2>
         <div class="content onlineAlbums">
             <div class="grid row">
+                <div class=" col-xs-12">
+                    <div class="row round">
+                        <div class="col-md-2 text-center">
+                            <a href="{{ path('administrationaddAlbum') }}">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
+                        <div class="col-md-5">
+                            Nom de l'Album
+                        </div>
+                        <div class="col-md-3">
+                            Date
+                        </div>
+                        <div class="col-md-2">
+                            Commentaires
+                        </div>
+
+
+                    </div>
+                </div>
+
                 {% for album in albumsOnLine %}
                     <div class="item col-xs-12" id="Album_{{ album.id }}" data-position="{{ album.position }}">
                         <div class="item-content row round {% if album.status == 2 %}atOne{% endif %}">
@@ -61,11 +82,15 @@
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-5">
                                 {{ album.name|slice(0,40) }}
                             </div>
                             <div class="col-md-3">
                                 {{ album.date|date('M Y') }}
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <i class="badge">{{ album.comments|length }}</i>
+
                             </div>
 
 

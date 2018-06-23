@@ -1,7 +1,7 @@
 <style>
-    {% for key,background in backgrounds %}
+    {% for key,photo in backgrounds %}
     .bgimg-{{ key+1 }} {
-        background: url("{{ vich_uploader_asset(background.photo, 'imageFile') }}");
+        background: url("{{ vich_uploader_asset(photo, 'imageFile') }}");
         background-size: cover;
         background-attachment: fixed;
     }

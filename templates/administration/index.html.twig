@@ -3,29 +3,80 @@
 {% block title %}{{ title }}!{% endblock %}
 
 {% block body %}
-    <div class="album">
-            <div class="content">
-                INDEX ADMIN<br/>
-                Ajouter un Album avec un Zip
-                <h4>TODO LIST</h4>
-                <ul>
-                    <li><s>Add Album</s>
-                        <ul>
-                            <li><s>* Info Album</s></li>
-                            <li><s>add SousAlbum</s></li>
-                            <li><s>add Photo</s></li>
-                        </ul>
-                    </li>
-                    <li><s>DELETE Album</s>
-                        <ul>
-                            <li><s>SET Null Miniature to album</s></li>
-                            <li><s>Delete Photo from Album</s></li>
-                            <li><s>Delete Photo from SousAlbum</s></li>
-                            <li><s>Delete SouSAlbum From Album</s></li>
-                            <li><s>Delete Album</s></li>
-                        </ul>
-                    </li>
-                    <li>UPDATE Album
+    <div class="addAlbum">
+        <div class="content">
+
+            <div class="round ">
+
+
+                <div class="row titlePage">
+                    <div class="col-xs-2">
+                        Date
+                    </div>
+                    <div class="col-xs-3">
+                        Album
+                    </div>
+                    <div class="col-xs-3">
+                        Qui ?
+                    </div>
+                    <div class="col-xs-3">
+                        Email
+                    </div>
+                    <div class="col-xs-1">
+
+                    </div>
+                </div>
+
+
+                {% for comment in lastComment %}
+                    <div class="row titleComment">
+                        <div class="col-xs-2">
+                            {{ comment.date|date('d-m-Y') }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ comment.album.name }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ comment.name }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ comment.email }}
+                        </div>
+                        <div class="col-xs-1">
+                            <i class="fa fa-eye viewComment" data-id="{{ comment.id }}"></i>
+                        </div>
+
+                    </div>
+                    <div class="row round commentAdmin" id="comment_{{ comment.id }}">
+                        <div class="comment">
+                            <div class="auteur">{{ comment.name }}</div>
+                            <div class="date">{{ comment.date|date("d/m/Y") }}</div>
+                            {{ comment.message|nl2br }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+            <h4>TODO LIST</h4>
+            <ul>
+                <li><s>Add Album</s>
+                    <ul>
+                        <li><s>* Info Album</s></li>
+                        <li><s>add SousAlbum</s></li>
+                        <li><s>add Photo</s></li>
+                    </ul>
+                </li>
+                <li><s>DELETE Album</s>
+                    <ul>
+                        <li><s>SET Null Miniature to album</s></li>
+                        <li><s>Delete Photo from Album</s></li>
+                        <li><s>Delete Photo from SousAlbum</s></li>
+                        <li><s>Delete SouSAlbum From Album</s></li>
+                        <li><s>Delete Album</s></li>
+                    </ul>
+                </li>
+                <li><s>UPDATE Album
                         <ul>
                             <li>Name</li>
                             <li>Date Time</li>
@@ -33,10 +84,18 @@
                             <li>Status</li>
                             <li>Message</li>
                         </ul>
-                    </li>
-                </ul>
+                    </s>
+                </li>
+                <li>
+                    Admin Background
+                    <ul>
+                        <li>Edit</li>
+                        <li>requette Ajax pour aller chercher les albums</li>
+                    </ul>
+                </li>
+            </ul>
 
-            </div>
+        </div>
     </div>
 {% endblock %}
 
@@ -48,6 +107,24 @@
                     console.log(data);
                 })*/
 
+        $('.viewComment').on('mouseenter', function (e) {
 
+            let idComment = $(this).data('id');
+            let commentAll = $('#comment_' + idComment);
+
+            commentAll.css({
+                'top': e.pageY - 200 + 'px',
+                'left': e.pageX - 500 + 'px',
+                'display': 'block'
+            });
+
+        });
+
+        $('.commentAdmin').on('mouseleave', function (e) {
+            $(this).css({
+                'display': 'none'
+            })
+
+        });
     </script>
 {% endblock %}

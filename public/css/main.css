@@ -901,6 +901,11 @@ button {
   display: none; }
 .addAlbum .listComment, .editAlbum .listComment {
   display: none; }
+.addAlbum .commentAdmin, .editAlbum .commentAdmin {
+  display: none;
+  position: absolute;
+  width: 600px;
+  z-index: 2000; }
 .addAlbum .modalUploadPhoto, .editAlbum .modalUploadPhoto {
   display: none;
   position: absolute;
@@ -972,7 +977,7 @@ button {
   .addAlbum .gallery label > input:checked + img, .editAlbum .gallery label > input:checked + img {
     /* (RADIO CHECKED) IMAGE STYLES */
     border: 10px solid #376369; }
-.addAlbum .titlePage, .editAlbum .titlePage {
+.addAlbum .titlePage, .addAlbum .titleComment, .editAlbum .titlePage, .editAlbum .titleComment {
   color: #FFF;
   background-color: #282e34;
   text-align: center;
@@ -982,7 +987,7 @@ button {
   margin-bottom: 10px;
   font-size: 1.1em;
   padding: 5px 0; }
-  .addAlbum .titlePage label, .editAlbum .titlePage label {
+  .addAlbum .titlePage label, .addAlbum .titleComment label, .editAlbum .titlePage label, .editAlbum .titleComment label {
     padding: 0;
     margin: 0;
     font-size: 1em;
@@ -1001,5 +1006,75 @@ button {
       display: inline-block; }
     .addAlbum .listSousAlbum .sousAlbum .sousAlbumDir, .addAlbum .listSousAlbum .sousAlbum .inputPosition, .addAlbum .listSousAlbum .sousAlbum .sousAlbumMessage, .addAlbum .listSousAlbum .sousAlbum .sousAlbumId, .editAlbum .listSousAlbum .sousAlbum .sousAlbumDir, .editAlbum .listSousAlbum .sousAlbum .inputPosition, .editAlbum .listSousAlbum .sousAlbum .sousAlbumMessage, .editAlbum .listSousAlbum .sousAlbum .sousAlbumId {
       display: none; }
+
+.modalSelectBack {
+  display: none; }
+  .modalSelectBack img {
+    max-height: 85vh;
+    max-width: 75vw; }
+  .modalSelectBack.body {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    min-height: 100vh;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.65); }
+    .modalSelectBack.body .content {
+      margin: 5vh auto;
+      width: 80vw;
+      max-height: 90vh;
+      background: #FFF;
+      overflow: hidden;
+      overflow-y: scroll; }
+      .modalSelectBack.body .content .chosePhoto {
+        display: none; }
+        .modalSelectBack.body .content .chosePhoto .menuListPhoto {
+          position: fixed;
+          width: 75vh;
+          z-index: 3000; }
+          .modalSelectBack.body .content .chosePhoto .menuListPhoto .row {
+            color: #FFF;
+            background-color: #282e34;
+            text-align: center;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            padding: 5px 0;
+            margin: 2px 5px; }
+        .modalSelectBack.body .content .chosePhoto .listPhoto {
+          padding-top: 50px; }
+          .modalSelectBack.body .content .chosePhoto .listPhoto img {
+            max-width: 100%;
+            border: none;
+            margin-bottom: 30px; }
+            .modalSelectBack.body .content .chosePhoto .listPhoto img.selected {
+              border: 10px solid #376369; }
+            .modalSelectBack.body .content .chosePhoto .listPhoto img.thisPhoto {
+              cursor: pointer; }
+      .modalSelectBack.body .content .listAlbums {
+        display: inline;
+        text-align: center; }
+        .modalSelectBack.body .content .listAlbums .selectAlbum {
+          float: left;
+          color: #FFF;
+          background-color: #282e34;
+          border: 5px solid #282e34;
+          text-align: center;
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 5px;
+          font-size: 1.1em;
+          padding: 5px 10px;
+          width: 30%;
+          height: 5vh;
+          margin: 2px 5px;
+          cursor: pointer;
+          overflow: hidden;
+          line-height: 4vh; }
+          .modalSelectBack.body .content .listAlbums .selectAlbum:hover {
+            color: #282e34;
+            background-color: #FFF;
+            border: 5px solid #282e34; }
 
 /*# sourceMappingURL=main.css.map */

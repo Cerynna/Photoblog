@@ -1,0 +1,168 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}{{ title }}!{% endblock %}
+
+{% block body %}
+    <div class="addAlbum">
+        <div class="content">
+            <div class="titlePage">
+                Le Parallax ( les image en fond de l'acceuil )
+            </div>
+            <form class="round row" method="post" action="{{ path('administrationconfig') }}">
+                {% for key,photo in backgrounds %}
+
+                    <div class="col-md-4">
+                        <div class="menuPhoto">
+                            <i class="fa fa-pencil changeBackground"
+                               data-photo="{{ photo.id }}"
+                               data-name="background-{{ loop.index }}"></i>
+                        </div>
+                        <img src="{{ asset("albums/" ~ photo.image) }}"
+                             class="img-responsive img-rounded album-mini"
+                             id="{{ photo.id }}">
+                    </div>
+
+                {% endfor %}
+
+            </form>
+        </div>
+    </div>
+    <div class="modalSelectBack body" id="modalSelectBack">
+        <div class="content text-center">
+            <div class="listAlbums">
+                {% for album in albums %}
+                    <div class="selectAlbum" data-id="{{ album.id }}">{{ album.name }}</div>
+                {% endfor %}
+            </div>
+            <div class="row chosePhoto">
+                <div class="menuListPhoto returnListAlbums">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <i class="fa fa-arrow-left"></i>
+                        </div>
+                        <div class="col-xs-6 titleAlbum">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="listPhoto">
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        /*        $('button').click(function () {
+                    let data = $('form').serializeArray();
+                    console.log(data);
+                })*/
+        $('.modalSelectBack').on('click', function (e) {
+
+            if (e.target.id === "modalSelectBack") {
+                $('.modalSelectBack').fadeToggle();
+            }
+
+
+        });
+
+        function ajaxBackground(idPhoto, name) {
+            console.log(idPhoto);
+            console.log(name);
+
+
+            $.ajax({
+                type: 'POST',
+                data: {
+                    idPhoto: idPhoto,
+                    name: name,
+                },
+                url: "/ajax/changeBackground",
+                dataType: 'json',
+                timeout: 2000,
+                success: function (response) {
+                    location.reload();
+
+                },
+                error: function () {
+
+                }
+            })
+
+
+        }
+
+        $('.changeBackground').on('click', function (e) {
+            $('.modalSelectBack').toggle();
+
+            $('.chosePhoto').data('idPhoto', $(this).data('photo'))
+            $('.chosePhoto').data('name', $(this).data('name'))
+
+        });
+
+        $('.returnListAlbums').on('click', function (e) {
+            $('.chosePhoto').toggle();
+            $('.listAlbums').toggle();
+            $('.listPhoto').html("");
+        });
+
+        $('.selectAlbum').on('click', function (e) {
+            $('.titleAlbum').html($(this).html());
+
+            let idAlbum = $(this).data('id');
+            let name = $('.chosePhoto').data('name');
+
+
+            $.ajax({
+                type: 'POST',
+                data: {
+                    idAlbum: idAlbum,
+                },
+                url: "/ajax/getAlbumPhoto",
+                dataType: 'json',
+                timeout: 2000,
+                success: function (response) {
+                    $('.chosePhoto').show();
+                    $('.listAlbums').toggle();
+                    $('.listPhoto').html("");
+                    nbPhotos = response.length;
+                    for (let i = 0; i < nbPhotos; i++) {
+
+                        html = '<div class="col-md-4 thisPhoto" ' +
+                            'data-name=""' +
+                            '' +
+                            '>';
+                        html += '<img src="/albums/' + response[i].name + '" ';
+                        html += 'class="img-responsive img-rounded album-mini thisPhoto ';
+                        if (response[i].id === $('.chosePhoto').data('idPhoto')) {
+                            html += ' selected';
+                        }
+                        html += '" ';
+                        html += 'onclick="ajaxBackground(' + response[i].id + ',\'' + name + '\')"';
+                        html += '>';
+                        html += '</div>';
+                        $('.listPhoto').append(html);
+                    }
+
+                },
+                error: function () {
+
+                }
+            })
+
+        });
+        /*
+                $('.commentAdmin').on('mouseleave', function (e) {
+                    $(this).css({
+                        'display': 'none'
+                    })
+
+                });*/
+    </script>
+{% endblock %}

@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Album;
+use App\Entity\Comment;
+use App\Entity\Config;
 use App\Entity\Photo;
 use App\Entity\SousAlbum;
 use App\Entity\UploadFile;
@@ -25,8 +27,30 @@ class AdministrationController extends Controller
     public function index()
     {
 
+        $lastComment = $this->getDoctrine()->getRepository(Comment::class)->lastComment(5);
+
+
         return $this->render('administration/index.html.twig', [
             'title' => 'Index Admin',
+            'lastComment' => $lastComment
+        ]);
+    }
+
+    /**
+     * @Route("/config", name="config")
+     */
+    public function config()
+    {
+        $backgrounds = $this->getDoctrine()->getRepository(Config::class)->getParallax();
+        $config = $this->getDoctrine()->getRepository(Config::class)->findAll();
+        $albums = $this->getDoctrine()->getRepository(Album::class)->findAll();
+
+
+        return $this->render('administration/config.html.twig', [
+            'title' => 'Config Admin',
+            'config' => $config,
+            'backgrounds' => $backgrounds,
+            'albums' => $albums,
         ]);
     }
 
@@ -45,15 +69,20 @@ class AdministrationController extends Controller
             $album->setMessage($_POST['messageAlbum']);
             $album->setDate(new \DateTime($_POST['dateTime']));
             $album->setStatus($_POST['status']);
-            foreach ($_POST['sousAlbumId'] as $position => $id) {
-                /** @var SousAlbum $sousAlbum */
-                $sousAlbum = $this->getDoctrine()->getRepository(SousAlbum::class)->findOneBy(['id' => $id]);
-                $sousAlbum->setPosition($position);
-                $sousAlbum->setName($_POST['sousAlbumName'][$position]);
-                $sousAlbum->setMessage($_POST['sousAlbumMessage'][$position]);
 
-                $this->getDoctrine()->getManager()->flush();
+            if (isset($_POST["sousAlbumId"]) and !empty($_POST["sousAlbumId"])) {
+                foreach ($_POST['sousAlbumId'] as $position => $id) {
+                    /** @var SousAlbum $sousAlbum */
+                    $sousAlbum = $this->getDoctrine()->getRepository(SousAlbum::class)->findOneBy(['id' => $id]);
+                    $sousAlbum->setPosition($position);
+                    $sousAlbum->setName($_POST['sousAlbumName'][$position]);
+                    $sousAlbum->setMessage($_POST['sousAlbumMessage'][$position]);
+
+                    $this->getDoctrine()->getManager()->flush();
+                }
             }
+
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirect('/administration/album');
@@ -75,20 +104,22 @@ class AdministrationController extends Controller
 
         if ($request->getMethod() === "POST") {
 
-            $arrFilesJSON = json_decode($_POST["arrFiles"]);
             $arrFile = [];
+            if (isset($_POST["arrFiles"]) and !empty($_POST["arrFiles"])) {
+                $arrFilesJSON = json_decode($_POST["arrFiles"]);
+                foreach ($arrFilesJSON as $file) {
+                    $explodeFile = explode('/', $file);
+                    if (count($explodeFile) === 2) {
+                        $arrFile[array_pop($explodeFile)] = null;
+                    }
+                    if (count($explodeFile) === 3) {
+                        $arrFile[array_pop($explodeFile)] = $explodeFile[1];
+                    }
+                }
+            }
 
             $albumDir = sha1(uniqid(mt_rand(), true));
 
-            foreach ($arrFilesJSON as $file) {
-                $explodeFile = explode('/', $file);
-                if (count($explodeFile) === 2) {
-                    $arrFile[array_pop($explodeFile)] = null;
-                }
-                if (count($explodeFile) === 3) {
-                    $arrFile[array_pop($explodeFile)] = $explodeFile[1];
-                }
-            }
 
             $album = new Album();
 
@@ -162,6 +193,7 @@ class AdministrationController extends Controller
      */
     public function AdminAlbums()
     {
+        /** @var array $albums */
         $albums = $this->getDoctrine()->getRepository(Album::class)->adminAlbumIndex();
 
         return $this->render('administration/listAlbum.html.twig', [

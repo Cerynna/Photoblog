@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Album;
-use App\Entity\Background;
+use App\Entity\Config;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,7 +27,8 @@ class MainController extends Controller
 
     public function parallax()
     {
-        $backgrounds = $this->getDoctrine()->getRepository(Background::class)->findAll();
+        $backgrounds = $this->getDoctrine()->getRepository(Config::class)->getParallax();
+
         return $this->render('/default/components/style.html.twig', [
             'backgrounds' => $backgrounds
         ]);

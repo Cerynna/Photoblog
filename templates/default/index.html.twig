@@ -88,15 +88,28 @@
             <h2 id="">Newletter</h2>
             <div class="content newLetter">
                 <p>
-                    {# {{ form_start(form, {'attr': {'class': "form-inline"}  }) }}
+                <form action="" method="post" role="form" class="row">
 
-                     {{ form_widget(form.type, {'attr': {'class': "hidden"}  }) }}
+                    <div class="col-xs-10">
+                        <input type="text" class="form-control" name="email" id="email" placeholder="jean@exemple.fr">
+                    </div>
 
-                     {{ form_widget(form.email, {'attr': {'class': "form-group",
-                         'placeholder': 'Votre email'}  }) }}
-                     {{ form_errors(form.email) }}
-                     <button type="submit" value=""><i class="glyphicon glyphicon-ok"></i></button>
-                     {{ form_end(form) }}#}
+
+                    <div class="col-xs-2 text-center">
+
+                        <button type="submit" value=""><i class="glyphicon glyphicon-ok"></i></button>
+                    </div>
+                </form>
+
+                {#  {{ form_start(form, {'attr': {'class': "form-inline"}  }) }}
+
+                  {{ form_widget(form.type, {'attr': {'class': "hidden"}  }) }}
+
+                  {{ form_widget(form.email, {'attr': {'class': "form-group",
+                      'placeholder': 'Votre email'}  }) }}
+                  {{ form_errors(form.email) }}
+
+                  {{ form_end(form) }}#}
                 </p>
             </div>
         </div>

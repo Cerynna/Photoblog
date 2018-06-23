@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Config;
+use App\Entity\Photo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,6 +18,30 @@ class ConfigRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Config::class);
+    }
+
+    /**
+     * @return Photo[] Returns an array of Photo objects
+     */
+    public function getParallax()
+    {
+        $arrConfig = $this->createQueryBuilder('c')
+            ->where('c.name LIKE :word ')
+            ->setParameter('word', 'background%')
+            ->orderBy('c.id', 'ASC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+
+
+        $result = [];
+
+        /** @var Config $config */
+        foreach ($arrConfig as $config) {
+            $result[] = $this->getEntityManager()->getRepository(Photo::class)->findOneBy(['id' => $config->getValue()]);
+        }
+
+        return $result;
     }
 
 //    /**
