@@ -57,10 +57,12 @@
                         <div class="col-md-3">
                             Date
                         </div>
-                        <div class="col-md-2">
-                            Commentaires
+                        <div class="col-md-1 text-center">
+                            <i class="fa fa-comments"></i>
                         </div>
-
+                        <div class="col-md-1 text-center">
+                            <i class="fa fa-envelope"></i>
+                        </div>
 
                     </div>
                 </div>
@@ -88,9 +90,17 @@
                             <div class="col-md-3">
                                 {{ album.date|date('M Y') }}
                             </div>
-                            <div class="col-md-2 text-center">
+                            <div class="col-md-1 text-center">
                                 <i class="badge">{{ album.comments|length }}</i>
-
+                            </div>
+                            <div class="col-md-1 text-center">
+                                {% if album.sendNewletter == 1 %}
+                                    <i class="fa fa-envelope"></i>
+                                {% elseif album.sendNewletter == 2 %}
+                                    <i class="fa fa-envelope-open"></i>
+                                {% else %}
+                                    <i class="fa fa-envelope-o"></i>
+                                {% endif %}
                             </div>
 
 

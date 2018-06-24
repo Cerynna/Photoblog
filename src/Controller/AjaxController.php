@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Album;
 use App\Entity\Comment;
 use App\Entity\Config;
+use App\Entity\Newsletter;
 use App\Entity\Photo;
 use App\Entity\SousAlbum;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -62,13 +63,110 @@ class AjaxController extends Controller
 
     /**
      * @param Request $request
+     * @param \Swift_Mailer $mailer
+     * @return JsonResponse
+     * @Route("/ajax/addNewsletter",name="addNewsletter")
+     */
+    public function addNewsletter(Request $request, \Swift_Mailer $mailer)
+    {
+        if ($request->isXmlHttpRequest()) {
+
+            $email = $request->get('email');
+
+            $verif = $this->getDoctrine()->getRepository(Newsletter::class)->findOneBy(['email' => $email]);
+
+            $result = [];
+
+            if ($verif === null) {
+
+                $newsletter = new Newsletter();
+                $newsletter->setEmail($email);
+                $newsletter->setDate(new \DateTime('now'));
+                $token = sha1(uniqid(mt_rand(), true));
+                $newsletter->setToken($token);
+                $newsletter->setStatus(Newsletter::STATUS['WAITING']);
+                $this->getDoctrine()->getManager()->persist($newsletter);
+                $this->getDoctrine()->getManager()->flush();
+
+
+                $message = (new \Swift_Message('Confirm ton Inscription'))
+                    ->setFrom(Newsletter::FROM)
+                    ->setTo($email)
+                    ->setBody(
+                        $this->renderView(
+                        // templates/emails/registration.html.twig
+                            'emails/registration.html.twig',
+                            array('token' => $token)
+                        ),
+                        'text/html'
+                    )/*
+                     * If you also want to include a plaintext version of the message
+                    ->addPart(
+                        $this->renderView(
+                            'emails/registration.txt.twig',
+                            array('name' => $name)
+                        ),
+                        'text/plain'
+                    )
+                    */
+                ;
+
+                $mailer->send($message);
+                $result = [
+                    "type" => "valid",
+                    "message" => "Un Email de confirmation vous a été envoyer."
+                ];
+
+            } else {
+
+                $verif->setDate(new \DateTime('now'));
+                $token = sha1(uniqid(mt_rand(), true));
+                $verif->setToken($token);
+                $this->getDoctrine()->getManager()->flush();
+
+                $message = (new \Swift_Message('Confirm ton Inscription'))
+                    ->setFrom(Newsletter::FROM)
+                    ->setTo($email)
+                    ->setBody(
+                        $this->renderView(
+                        // templates/emails/registration.html.twig
+                            'emails/registration.html.twig',
+                            array('token' => $token)
+                        ),
+                        'text/html'
+                    )/*
+                     * If you also want to include a plaintext version of the message
+                    ->addPart(
+                        $this->renderView(
+                            'emails/registration.txt.twig',
+                            array('name' => $name)
+                        ),
+                        'text/plain'
+                    )
+                    */
+                ;
+
+                $mailer->send($message);
+
+                $result = [
+                    "type" => "valid",
+                    "message" => "Un Email de confirmation vous a été envoyer."
+                ];
+            }
+
+
+            return new JsonResponse($result);
+        }
+    }
+
+    /**
+     * @param Request $request
      * @Route("/ajax/changeBackground",name="changeBackground")
      * @return JsonResponse
      */
     public function changeBackground(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-
 
 
             $name = $request->get('name');

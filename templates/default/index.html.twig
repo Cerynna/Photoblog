@@ -2,9 +2,6 @@
 {% block title %}Home{% endblock %}
 {% block body %}
     {% import "default/macros/randomAOS.html.twig" as randomAOS %}
-    {% if notice is defined %}
-        {{ dump(notice) }}
-    {% endif %}
 
 
 
@@ -87,30 +84,21 @@
         <div class="container">
             <h2 id="">Newletter</h2>
             <div class="content newLetter">
-                <p>
                 <form action="" method="post" role="form" class="row">
 
                     <div class="col-xs-10">
-                        <input type="text" class="form-control" name="email" id="email" placeholder="jean@exemple.fr">
+                        <input type="text" class="form-control" name="email" id="emailNewsletter"
+                               placeholder="jean@exemple.fr" value="test@gmail.com">
                     </div>
 
 
                     <div class="col-xs-2 text-center">
 
-                        <button type="submit" value=""><i class="glyphicon glyphicon-ok"></i></button>
+                        <div><i class="glyphicon glyphicon-ok signInNewsletter"></i></div>
                     </div>
                 </form>
 
-                {#  {{ form_start(form, {'attr': {'class': "form-inline"}  }) }}
 
-                  {{ form_widget(form.type, {'attr': {'class': "hidden"}  }) }}
-
-                  {{ form_widget(form.email, {'attr': {'class': "form-group",
-                      'placeholder': 'Votre email'}  }) }}
-                  {{ form_errors(form.email) }}
-
-                  {{ form_end(form) }}#}
-                </p>
             </div>
         </div>
 
@@ -157,6 +145,53 @@
     <script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
     <script>
         AOS.init();
+
+        function validateEmail(email) {
+            let re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            return re.test(email);
+        }
+
+        $('.signInNewsletter').on('click', function (e) {
+            let email = $('#emailNewsletter').val();
+
+            if (validateEmail(email)) {
+                console.log("Mail okay");
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        email: email,
+                    },
+                    url: "/ajax/addNewsletter",
+                    dataType: 'json',
+                    timeout: 6000,
+                    success: function (response) {
+                        console.log(response)
+                        if (response.type === "valid") {
+                            $('#emailNewsletter').val("");
+                        }
+                        $('.flashes').html('<div class="myFlash">\n' +
+                            '<div class="close">\n' +
+                            '<i class="fa fa-times"></i>\n' +
+                            '</div>\n' +
+                            '<div class="content">\n' +
+                            response.message +
+                            '</div>\n' +
+                            '</div>');
+                        /*$('#emailNewsletter').val("")*/
+                    },
+                    error: function () {
+
+                    }
+                })
+            } else {
+                console.log("Mail pas okay")
+            }
+
+
+            /**/
+
+
+        })
     </script>
     <script src="{{ asset('js/main.js') }}"></script>
 {% endblock %}

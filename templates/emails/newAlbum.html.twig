@@ -1,102 +1,143 @@
-{% extends 'baseAdmin.html.twig' %}
-{% block body %}
-    <div class="menuAdmin" data-aos="zoom-in">
-        <ul>
-            <li>
-                <a href="" onclick="window.history.back();return false;"><i
-                            class="glyphicon glyphicon-chevron-left"></i></a>
-            </li>
-            <li>
-                <i class="glyphicon glyphicon-ok" onclick="document.sendMail.submit();"></i>
-            </li>
-        </ul>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="dropdown">
-                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-                    Quel type de mail veu tu envoyer ?
-                </button>
-                <ul class="dropdown-menu">
-                    <li onclick='$(".newAlbum").removeClass("hidden");$(".newMail").addClass("hidden");'>Nouvel Album
-                    </li>
-                    <li onclick='$(".newMail").removeClass("hidden");$(".newAlbum").addClass("hidden");'>Ecrire un
-                        mail
-                    </li>
-                </ul>
-            </div>
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Newletter Nouvel album</title>
+
+    <style>
+        body {
+            font: 20px "Lato", sans-serif;
+            margin: 0;
+        }
+
+        h2 {
+            background-color: rgba(40, 46, 52, 1);
+            color: #FFF;
+            text-align: center;
+            padding: 5px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -ms-border-radius: 5px;
+            border-radius: 5px;
+            font-size: 1.5em;
+        }
+
+        a {
+            background: none;
+            color: #FFF !important;
+        }
+
+        p {
+            border: none;
+            background: none;
+            font-size: 1em;
+            text-align: left;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            background-color: rgba(40, 46, 52, 1);
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .content {
+            width: 700px;
+            min-height: 500px;
+            color: #777;
+            background-color: #ebebeb;
+            padding: 20px 50px;
+            text-align: justify;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            -ms-border-radius: 10px;
+            border-radius: 10px;
+            margin: 50px auto;
+            font-size: 1em;
+            padding: 2px;
+        }
+
+        .album-mini {
+            height: 150px !important;
+            width: 150px;
+            float: left;
+            background: rgba(40, 46, 52, 0.5);
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -ms-border-radius: 5px;
+            border-radius: 5px;
+            margin: 5px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background-color: rgba(40, 46, 52, 1);
+            border: 2px solid rgba(40, 46, 52, 1);
+            color: #FFF;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -ms-border-radius: 5px;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+
+        .btn:hover {
+            background-color: #FFF;
+            border: 2px solid rgba(40, 46, 52, 1);
+            color: rgba(40, 46, 52, 1) !important;
+
+        }
+        .message{
+            padding: 10px 30px;
+        }
+        .previewAlbum{
+            min-height: 250px;
+            text-align: right;
+            padding: 10px 30px;
+        }
+        .footer{
+            padding: 10px 30px;
+            font-size: 0.8em;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        <div class="title">
+            <a href="{{ absolute_url(path('album', {'dir': album.dir})) }}">
+                <h2>{{ album.name }}</h2>
+            </a>
         </div>
-        <div class="col-md-6"></div>
+        <div class="message">
+            {{ album.message|slice(0,200) }}...
+
+        </div>
+        <div class="previewAlbum">
+            {% for photo in  album.photos|slice(1,4) %}
+
+                <img src="{{ absolute_url(vich_uploader_asset(photo, 'imageFile')) }}" class="album-mini"
+                     alt="{{ photo.messages }}">
+
+            {% endfor %}
+            <a href="{{ absolute_url(path('album', {'dir': album.dir})) }}" class="btn">
+                Découvrir l'Album
+            </a>
+        </div>
+        <div class="footer">
+            <a href="{{ absolute_url(path('home')) }}" class="btn">
+                Désinscrire de la Newsletter
+            </a>
+
+        </div>
+
+
     </div>
-    <div class="row newAlbum hidden">
-        <form name="sendMail" action="{{ path('testMail',{ id: '@idAlbum' } ) }}" method="post">
-            <div class="col-md-12">
-                <h4>Pour quel album veux tu envoyer un mail ?</h4>
-            </div>
-            <div class="col-md-6">
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-                        Album
-                    </button>
-                    <ul class="dropdown-menu">
-                        {% for album in albums %}
-                            <li onclick='showNewAlbumMail("{{ album.id }}","{{ album.name }}")'
-                                value="{{ album.id }}">{{ album.name }}</li>
-                        {% endfor %}
-
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <input type="text" id="album" disabled="disabled" class="form-control">
-            </div>
-            <div class="col-md-12">
-                <textarea class="form-control" id="content" rows="30"></textarea>
-            </div>
-            <div class="col-md-12">
-                <label>Preview du Mail</label>
-                <div class="col-md-12" id="preview"></div>
-            </div>
-
-        </form>
-    </div>
-    <div class="row newMail hidden">
-        Mail Basic
-    </div>
-    <script>
-
-
-        function showNewAlbumMail(id, name) {
-            document.getElementById("album").value = name;
-            let text =
-                "<div class=\"container\">\n" +
-                "<div class=\"content\">\n" +
-                "<h3>Un nouvel Album viens d'etre ajouté !</h3>\n" +
-                "<h4>Bonjour,</h4>\n" +
-                "<p>\n" +
-                "Je viens de mettre en ligne un nouvelle album sur mon site.\n" +
-                "<h2><a target=\"_blank\" href=\"{{ url('album', { id_album: '@idAlbum' }) }}\">" + name + "</a></h2>\n" +
-                "</p>\n" +
-                "</div>\n" +
-
-
-                "<a target=\"_blank\" href=\"{{ url('homepage') }}\">Accueil du site</a> | " +
-                "<a target=\"_blank\" href=\"{{ url('homepage') }}\">Se désinscrire de la newsletter</a>" +
-                "</div>\n";
-            document.getElementById("content").value = text.replace("@idAlbum", id);
-
-            let align = document.sendMail.getAttribute("action");
-            let linkAction = align.replace("@idAlbum", id);
-            document.sendMail.setAttribute('action', linkAction);
-
-        }
-
-
-        let wpcomment = document.getElementById('content');
-
-        wpcomment.onkeyup = wpcomment.onkeypress = wpcomment.onfocus = function () {
-            document.getElementById('preview').innerHTML = this.value;
-        }
-    </script>
-{% endblock %}
+</body>
+</html>

@@ -6,22 +6,25 @@
     {% include 'default/components/head.html.twig' %}
     {% block stylesheets %}
     {% endblock %}
-        {{ render(controller('App\\Controller\\MainController::parallax')) }}
+    {{ render(controller('App\\Controller\\MainController::parallax')) }}
 </head>
 <body id="top">
 <nav>
     {% block navBar %}
         {% include 'default/components/navbar.html.twig' %}
     {% endblock %}
-</nav>
 
-{% for message in app.flashes('notice') %}
-    <div class="notice">
-        {{ message }}
-    </div>
-{% endfor %}
+</nav>
+<div class="flashes">
+    {% block flash %}
+        {% include'default/components/flashes.html.twig' %}
+    {% endblock %}
+</div>
+
+
 
 <section>
+
     {% block body %}
     {% endblock %}
 </section>
@@ -35,10 +38,14 @@
         crossorigin="anonymous"></script>
 <script src="{{ asset("js/jquery.sticky.js") }}"></script>
 <script>
-    setTimeout(function() {
-    $('.notice').addClass("hidden");
+    setTimeout(function () {
+        $('.notice').addClass("hidden");
 
     }, 3000);
+
+    $('.myFlash .close').on('click', function (e) {
+        $('.myFlash').slideToggle();
+    })
 </script>
 {% block javascript %}
 {% endblock %}

@@ -5,13 +5,24 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\EntityListeners;
 use Doctrine\ORM\Mapping\OrderBy;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AlbumRepository")
+ * @EntityListeners({"App\EventListener\AlbumListener"})
+ *
  */
 class Album
 {
+
+    const STATUS = [
+        'WAITING' => 0,
+        'PUBLISH' => 1,
+        'ATONE' => 2,
+        'GHOST' => 3
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -72,11 +83,17 @@ class Album
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $sendNewletter;
+
     public function __construct()
     {
         $this->photos = new ArrayCollection();
         $this->sousAlbums = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->sendNewletter = 0;
     }
 
     public function getId()
@@ -262,6 +279,18 @@ class Album
                 $comment->setAlbum(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSendNewletter(): ?int
+    {
+        return $this->sendNewletter;
+    }
+
+    public function setSendNewletter(int $sendNewletter = 0): self
+    {
+        $this->sendNewletter = $sendNewletter;
 
         return $this;
     }

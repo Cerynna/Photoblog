@@ -588,6 +588,17 @@ span.border {
   border-radius: 10px;
   margin: 1px 0 63px 0;
   font-size: 1.5em; }
+.home .signInNewsletter {
+  font-size: 0.8em !important;
+  background: #282e34;
+  color: #FFF;
+  border-radius: 50% !important;
+  outline: none;
+  padding: 10px;
+  cursor: pointer; }
+  .home .signInNewsletter:hover {
+    background: #FFF;
+    color: #282e34; }
 .home .btn {
   padding: 10px !important;
   font-size: 0.8em !important;
@@ -1076,5 +1087,33 @@ button {
             color: #282e34;
             background-color: #FFF;
             border: 5px solid #282e34; }
+
+.myFlash {
+  position: fixed;
+  top: 80px;
+  right: 10px;
+  z-index: 3000;
+  opacity: 0.4; }
+  .myFlash:hover {
+    opacity: 1; }
+  .myFlash .content {
+    background: #282e34;
+    text-align: center;
+    color: #FFF;
+    width: 40vw;
+    max-height: 20vh;
+    margin: 0;
+    padding: 20px 10px;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.51);
+    border-radius: 0; }
+  .myFlash .close {
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #FFF;
+    filter: alpha(opacity=20);
+    margin-right: 5px;
+    margin-top: 5px; }
 
 /*# sourceMappingURL=main.css.map */

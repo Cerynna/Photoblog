@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Album;
 use App\Entity\Comment;
 use App\Entity\Config;
+use App\Entity\Newsletter;
 use App\Entity\Photo;
 use App\Entity\SousAlbum;
 use App\Entity\UploadFile;
@@ -21,6 +22,21 @@ use ZipArchive;
  */
 class AdministrationController extends Controller
 {
+
+    /**
+     * @Route("/test", name="test")
+     */
+    public function testMail()
+    {
+
+        $album = $this->getDoctrine()->getRepository(Album::class)->findOneBy(['id' => 31]);
+
+
+        return $this->render('emails/newAlbum.html.twig', [
+            'album' => $album
+        ]);
+    }
+
     /**
      * @Route("/", name="homeAdmin")
      */
@@ -69,7 +85,6 @@ class AdministrationController extends Controller
             $album->setMessage($_POST['messageAlbum']);
             $album->setDate(new \DateTime($_POST['dateTime']));
             $album->setStatus($_POST['status']);
-
             if (isset($_POST["sousAlbumId"]) and !empty($_POST["sousAlbumId"])) {
                 foreach ($_POST['sousAlbumId'] as $position => $id) {
                     /** @var SousAlbum $sousAlbum */
@@ -81,8 +96,6 @@ class AdministrationController extends Controller
                     $this->getDoctrine()->getManager()->flush();
                 }
             }
-
-
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirect('/administration/album');
@@ -92,6 +105,47 @@ class AdministrationController extends Controller
             'title' => 'Index Admin',
             'album' => $album
         ]);
+    }
+
+    /**
+     * @param \Swift_Mailer $mailer
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function verifNewletters(\Swift_Mailer $mailer)
+    {
+        $newletters = $this->getDoctrine()->getRepository(Newsletter::class)->findAll();
+        $albums = $this->getDoctrine()->getRepository(Album::class)->findBy(['sendNewletter' => 1]);
+        /** @var Album $album */
+        foreach ($albums as $album) {
+            /** @var Newsletter $newsletter */
+            foreach ($newletters as $newsletter) {
+
+                $message = (new \Swift_Message('Nouvelle Album **' . $album->getName() . '**'))
+                    ->setFrom(Newsletter::FROM)
+                    ->setTo($newsletter->getEmail())
+                    ->setBody(
+                        $this->renderView(
+                        // templates/emails/registration.html.twig
+                            'emails/newAlbum.html.twig',
+                            array('album' => $album)
+                        ),
+                        'text/html'
+                    );
+
+                $mailer->send($message);
+            }
+
+
+            $album->setSendNewletter(2);
+            $this->getDoctrine()->getManager()->persist($album);
+            $this->getDoctrine()->getManager()->flush();
+
+        }
+
+
+        return $this->render('void.html.twig');
+
+
     }
 
 
