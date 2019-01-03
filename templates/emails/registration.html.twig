@@ -78,17 +78,16 @@
 <body>
 <div class="container">
     <div class="content">
-        <h4>Confirme ton inscription a la newsletter</h4>
+        <h4>Confirme ton inscription à la newsletter</h4>
         <p>
-            Pour confirmer ton inscription a la newsletter "Nom du Site" il te faut cliquer sur ce <a
+            Pour confirmer ton inscription à la newsletter de Patricia Martin il te faut cliquer sur ce <a
                     href="{{ absolute_url(path('validToken', {'token': token}))  }}">lien</a>
-            {{ token }}
         </p>
         <p>
             Ce mail est valable seulement 3 jours
         </p>
         <p>
-            Ci ce mail ne vous est pas destiné cliquer <a href="{{ path('home') }}">>>ICI<<</a>
+            Si ce mail ne vous est pas destiné cliquer <a href="{{ path('home') }}">>>ICI<<</a>
         </p>
     </div>
 

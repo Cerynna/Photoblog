@@ -6,6 +6,13 @@
     {% include 'default/components/head.html.twig' %}
     {% block stylesheets %}
     {% endblock %}
+    {% if app.session.get('actionAdmin') is not null %}
+        <style>
+            .{{ app.session.get('actionAdmin') }} {
+                display: block !important;
+            }
+        </style>
+    {% endif %}
 </head>
 <body id="top">
 {{ render(controller('App\\Controller\\AdministrationController::verifNewletters')) }}
@@ -37,7 +44,6 @@
         </div>
     </div>
 
-
 </section>
 
 <script
@@ -61,6 +67,28 @@
     $('.myModal').on('click', function (data) {
         $(this).hide();
     })
+    $('.deletePhoto').on('click', function (data) {
+
+        confirm('Tu va supprimer une photo es tu sur ?');
+        $.ajax({
+            type: 'POST',
+            data: {
+                idPhoto: $(this).data('photo'),
+            },
+            url: "/ajax/deletePhoto",
+            dataType: 'json',
+            timeout: 2000,
+            success: function (response) {
+                $('#photo_' + response).hide()
+
+            },
+            error: function () {
+
+            }
+        })
+
+
+    });
 </script>
 
 {% block javascript %}

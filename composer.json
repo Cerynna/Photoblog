@@ -29,6 +29,7 @@
         "symfony/web-link": "^4.0",
         "symfony/webpack-encore-pack": "*",
         "symfony/yaml": "^4.0",
+        "unsplash/unsplash": "^2.4",
         "vich/uploader-bundle": "^1.8"
     },
     "require-dev": {

@@ -20,6 +20,52 @@ class AjaxController extends Controller
 
     /**
      * @param Request $request
+     * @Route("/ajax/changePositionPhoto",name="changePositionPhoto")
+     * @return JsonResponse
+     */
+    public function changePositionPhoto(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+
+            $idPhoto = $idAlbum = $request->get('photo');
+            $action = $idAlbum = $request->get('action');
+            $type = $idAlbum = $request->get('type');
+
+            $photo = $this->getDoctrine()->getRepository(Photo::class)->findOneBy(['id' => $idPhoto]);
+            $photoChange = null;
+
+            $operator = +1;
+            if (strtolower($action) === "down") {
+                $operator = -1;
+            }
+            if (strtolower($type) === "album") {
+                $photoChange = $this->getDoctrine()->getRepository(Photo::class)->findOneBy(['album' => $photo->getAlbum(), 'position' => $photo->getPosition() + $operator]);
+            }
+            if (strtolower($type) === "sousalbum") {
+                $photoChange = $this->getDoctrine()->getRepository(Photo::class)->findOneBy(['sousAlbum' => $photo->getSousAlbum(), 'position' => $photo->getPosition() + $operator]);
+            }
+
+            if (!is_null($photoChange)) {
+
+                $newPositionPhotoChange = $photo->getPosition();
+                $newPositionPhoto = $photoChange->getPosition();
+
+                $photoChange->setPosition($newPositionPhotoChange);
+                $photo->setPosition($newPositionPhoto);
+
+                $this->getDoctrine()->getManager()->flush();
+
+
+            }
+            $this->get('session')->set('actionAdmin', "listPhotos");
+
+            return new JsonResponse(['from' => $photo->getId(), 'to' => $photoChange->getId(), 'action' => $action]);
+        }
+    }
+
+
+    /**
+     * @param Request $request
      * @Route("/ajax/getAlbumPhoto",name="getAlbumPhoto")
      * @return JsonResponse
      */
@@ -60,6 +106,114 @@ class AjaxController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @Route("/ajax/transferePhoto",name="transferePhoto")
+     * @return JsonResponse
+     */
+    public function transferePhoto(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+
+
+            $select = $request->get('select');
+            $idPhoto = $request->get('photo');
+
+            list($type, $id) = explode('_', $select);
+            /** @var SousAlbum $sousAlbumFrom */
+            $photo = $this->getDoctrine()->getRepository(Photo::class)->findOneBy(['id' => $idPhoto]);
+            $photo->setAlbum(null);
+            $photo->setSousAlbum(null);
+
+
+            if (strtoupper($type) === "A") {
+                /** @var Album $album */
+                $album = $this->getDoctrine()->getRepository(Album::class)->findOneBy(["id" => $id]);
+                $album->addPhoto($photo);
+                $photo->setAlbum($album);
+            }
+            if (strtoupper($type) === "SA") {
+                /** @var SousAlbum $sousAlbum */
+                $sousAlbum = $this->getDoctrine()->getRepository(SousAlbum::class)->findOneBy(['id' => $id]);
+                $sousAlbum->addPhoto($photo);
+                $photo->setSousAlbum($sousAlbum);
+            }
+            $this->getDoctrine()->getManager()->flush();
+            $this->get('session')->set('actionAdmin', "listPhotos");
+            return new JsonResponse('');
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/ajax/transferePhotos",name="transferePhotos")
+     * @return JsonResponse
+     */
+    public function transferePhotos(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+
+
+            $select = $request->get('select');
+            $idFrom = $request->get('idFrom');
+
+            list($type, $idTo) = explode('_', $select);
+            /** @var SousAlbum $sousAlbumFrom */
+            $sousAlbumFrom = $this->getDoctrine()->getRepository(SousAlbum::class)->findOneBy(['id' => $idFrom]);
+
+            if (strtoupper($type) === "A") {
+                /** @var Album $album */
+                $album = $this->getDoctrine()->getRepository(Album::class)->findOneBy(["id" => $idTo]);
+                /** @var Photo $photo */
+                foreach ($sousAlbumFrom->getPhotos() as $photo) {
+                    $sousAlbumFrom->removePhoto($photo);
+                    $album->addPhoto($photo);
+                }
+            }
+            if (strtoupper($type) === "SA") {
+                /** @var SousAlbum $sousAlbumTo */
+                $sousAlbumTo = $this->getDoctrine()->getRepository(SousAlbum::class)->findOneBy(['id' => $idTo]);
+                foreach ($sousAlbumFrom->getPhotos() as $photo) {
+                    $sousAlbumFrom->removePhoto($photo);
+                    $sousAlbumTo->addPhoto($photo);
+                }
+            }
+            $album = $sousAlbumFrom->getAlbum();
+            $album->removeSousAlbum($sousAlbumFrom);
+            $this->getDoctrine()->getManager()->flush();
+
+            return new JsonResponse('');
+        }
+    }
+
+
+    /**
+     * @param Request $request
+     * @Route("/ajax/supprSousAlbum",name="supprSousAlbum")
+     * @return JsonResponse
+     */
+    public function supprSousAlbum(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $idSousAlbum = $request->get('idSousAlbum');
+            /** @var SousAlbum $sousAlbum */
+            $sousAlbum = $this->getDoctrine()->getRepository(SousAlbum::class)->findOneBy(['id' => $idSousAlbum]);
+            if (!is_null($sousAlbum)) {
+                if (!is_null($sousAlbum->getPhotos())) {
+                    foreach ($sousAlbum->getPhotos() as $photo) {
+                        $sousAlbum->removePhoto($photo);
+                    }
+                }
+                $album = $sousAlbum->getAlbum();
+                $album->removeSousAlbum($sousAlbum);
+                $this->getDoctrine()->getManager()->remove($sousAlbum);
+                $this->getDoctrine()->getManager()->flush();
+            }
+
+
+            return new JsonResponse('');
+        }
+    }
 
     /**
      * @param Request $request
@@ -89,7 +243,7 @@ class AjaxController extends Controller
                 $this->getDoctrine()->getManager()->flush();
 
 
-                $message = (new \Swift_Message('Confirm ton Inscription'))
+                $message = (new \Swift_Message('Confirme ton inscription'))
                     ->setFrom(Newsletter::FROM)
                     ->setTo($email)
                     ->setBody(
@@ -124,7 +278,7 @@ class AjaxController extends Controller
                 $verif->setToken($token);
                 $this->getDoctrine()->getManager()->flush();
 
-                $message = (new \Swift_Message('Confirm ton Inscription'))
+                $message = (new \Swift_Message('Confirme ton inscription'))
                     ->setFrom(Newsletter::FROM)
                     ->setTo($email)
                     ->setBody(
@@ -254,12 +408,13 @@ class AjaxController extends Controller
 
             $album = $this->getDoctrine()->getRepository(Album::class)->findOneBy(['id' => $idAlbum]);
             $photo = new Photo();
+            $newname = sha1(uniqid(mt_rand(), true));
 
             $fileObject = new UploadedFile($_FILES['file']['tmp_name'], $_FILES['file']['name'], $_FILES['file']['type'], $_FILES['file']['size'], $_FILES['file']['error']);
-            $fileObject->move($this->getParameter('kernel.project_dir') . "/public/albums/" . $album->getDir(), $fileObject->getClientOriginalName());
+            $fileObject->move($this->getParameter('kernel.project_dir') . "/public/albums/" . $album->getDir(), $newname . "." . $fileObject->getExtension());
 
 
-            $photo->setImage($album->getDir() . "/" . $fileObject->getClientOriginalName());
+            $photo->setImage($album->getDir() . "/" . $newname . "." . $fileObject->getExtension());
             $photo->setMessages($album->getName());
             $photo->setUpdatedAt(new \DateTime('now'));
 

@@ -489,7 +489,27 @@ span.border {
   .grid {
     position: relative;
   }
+  .addNewSousAlbum {
+    text-align: right;
+    span {
+      background: rgba(40, 46, 52, 1);
+      color: #FFF;
+      border: 3px solid rgba(40, 46, 52, 1);
+      border-radius: 5px !important;
+      position: relative;
+      bottom: 0;
+      padding: 5px 10px;
+      cursor: pointer;
+      &:hover {
+        background: #FFF;
+        color: rgba(40, 46, 52, 1);
+        border: 3px solid rgba(40, 46, 52, 1);
+      }
+    }
 
+    margin-bottom: 20px;
+
+  }
   .item {
     display: block;
     position: absolute;
@@ -585,8 +605,14 @@ span.border {
     background-repeat: no-repeat;
     background-size: cover;
     background: #FFF;
+    color: #000;
     &.atOne {
       border: 5px solid rgb(56, 158, 159);
+    }
+    &.messageError{
+      border: 5px solid #560000;
+      background: #ffdbe2;
+      color: #000;
     }
   }
   .menuPhoto {
@@ -635,21 +661,21 @@ span.border {
     padding: 5px 20px;
     z-index: 5;
   }
-  span {
-    font-size: 0.8em;
-    background-color: rgb(197, 227, 255);
-    color: rgba(40, 46, 52, 1);
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin: 23px 50px 0 0;
-    padding: 5px;
-    border-radius: 0 0 5px 5px;
-    border-bottom: 3px solid rgba(40, 46, 52, 1);
-    border-left: 3px solid rgba(40, 46, 52, 1);
-    border-right: 3px solid rgba(40, 46, 52, 1);
-  }
-  p {
+  /*  span {
+      font-size: 0.8em;
+      background-color: rgb(197, 227, 255);
+      color: rgba(40, 46, 52, 1);
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 23px 50px 0 0;
+      padding: 5px;
+      border-radius: 0 0 5px 5px;
+      border-bottom: 3px solid rgba(40, 46, 52, 1);
+      border-left: 3px solid rgba(40, 46, 52, 1);
+      border-right: 3px solid rgba(40, 46, 52, 1);
+    }*/
+/*  p {
     color: rgba(40, 46, 52, 1);
     height: 100%;
     max-height: 150px;
@@ -661,7 +687,7 @@ span.border {
     border: 5px solid rgba(40, 46, 52, 1);
     overflow-x: hidden;
     overflow-y: scroll;
-  }
+  }*/
   i {
     cursor: pointer;
     width: 30px;
@@ -715,7 +741,71 @@ span.border {
       color: #FFF;
     }
   }
+  .titleError{
+    background: #560000;
+  }
+  .changeParentPhoto {
+    background: red;
+    padding: 10px;
+    width: 300px;
+    min-height: 100px;
+    position: absolute;
+    display: none;
+    .actionParentPhoto {
+      background: rgba(40, 46, 52, 1);
+      color: #FFF;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      margin-bottom: 5px;
+      &:hover {
+        background: rgba(60, 180, 191, 0.67);
+      }
+    }
+  }
+  .deleteSousAlbum {
+    display: none;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(40, 46, 52, 0.51);
+    left: 0;
+    .content {
+      width: 600px;
+      margin: 30px auto;
+      background: #FFF;
+      .menu {
+        padding-top: 30px;
+      }
+      .step {
+        &.step-2 {
+          display: none;
+        }
+        .choice {
+          padding-top: 30px;
+        }
+        .deletePhotos {
+          &:hover {
+            background: red;
+          }
+        }
+        .choiceTransfere {
+          background: rgba(40, 46, 52, 1);
+          color: #FFF;
+          border-radius: 5px;
+          padding: 5px 10px;
+          cursor: pointer;
+          margin-bottom: 5px;
+          &:hover {
+            background: rgba(60, 180, 191, 0.67);
+          }
+        }
 
+      }
+
+    }
+  }
 }
 
 .home {
@@ -830,6 +920,10 @@ span.border {
       background: #ebebeb;
     }
   }
+  .message{
+    font-size: 0.6em
+  }
+
 }
 
 .menuAlbum {
@@ -1378,7 +1472,7 @@ button {
   }
   .content {
     background: rgba(40, 46, 52, 1);
-text-align: center;
+    text-align: center;
     color: #FFF;
     width: 40vw;
     max-height: 20vh;

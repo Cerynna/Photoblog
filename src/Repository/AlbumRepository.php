@@ -103,6 +103,23 @@ class AlbumRepository extends ServiceEntityRepository
     }
 
 
+    public function statAlbums()
+    {
+        $result = [];
+        $result['total'] = $this->createQueryBuilder('a')
+            ->select("count(a)")
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $result['noMiniature'] = $this->createQueryBuilder('a')
+            ->select("a")
+            ->where('a.imageMiniature IS NULL')
+            ->getQuery()
+            ->getResult();
+        return $result;
+    }
+
+
 //    /**
 //     * @return Album[] Returns an array of Album objects
 //     */

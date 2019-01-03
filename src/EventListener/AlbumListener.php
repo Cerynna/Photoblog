@@ -20,6 +20,7 @@ class AlbumListener
     public function preUpdate(Album $album, PreUpdateEventArgs $event)
     {
         $this->checkForNewletter($event);
+
     }
 
     public function prePersist(Album $album,LifecycleEventArgs $event)

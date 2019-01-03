@@ -37,6 +37,7 @@ class Album
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Photo", mappedBy="album", cascade={"all"})
+     * @OrderBy({"position" = "ASC"})
      */
     private $photos;
 

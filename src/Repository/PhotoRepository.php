@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Album;
 use App\Entity\Photo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -18,6 +19,45 @@ class PhotoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Photo::class);
     }
+
+    public function statPhotos()
+    {
+
+
+
+        $result = [];
+        $result['total'] = $this->createQueryBuilder('p')
+            ->select("count(p)")
+            ->getQuery()
+            ->getSingleScalarResult();
+        $result['inAlbum'] = $this->createQueryBuilder('p')
+            ->select("count(p)")
+            ->where('p.album IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+        $result['inSousAlbum'] = $this->createQueryBuilder('p')
+            ->select("count(p)")
+            ->where('p.sousAlbum IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $result['inNoWhere'] = $this->createQueryBuilder('p')
+            ->select("p")
+            ->where('p.album IS NULL')
+            ->andWhere('p.sousAlbum IS NULL')
+            ->getQuery()
+            ->getResult();
+
+        $result['inFull'] = $this->createQueryBuilder('p')
+            ->select("p")
+            ->where('p.album IS NOT NULL')
+            ->andWhere('p.sousAlbum IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
+    }
+
 
 //    /**
 //     * @return Photo[] Returns an array of Photo objects

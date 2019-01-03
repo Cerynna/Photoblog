@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Unsplash\OAuth2\Client\Provider\Unsplash;
 use ZipArchive;
 
 /**
@@ -45,10 +46,53 @@ class AdministrationController extends Controller
 
         $lastComment = $this->getDoctrine()->getRepository(Comment::class)->lastComment(5);
 
+        $statPhotos = $this->getDoctrine()->getRepository(Photo::class)->statPhotos();
+        $statAlbums = $this->getDoctrine()->getRepository(Album::class)->statAlbums();
+
+        dump($statPhotos);
+        dump($statAlbums);
+        $url = "https://api.unsplash.com/photos/random";
+
+        $provider = new \Unsplash\OAuth2\Client\Provider\Unsplash([
+            'clientId' => 'c75bae61c0b54165c93a067d0067c2640906a792452ff1616b7ed2d5f9c5c934',
+            'clientSecret' => '82f79bb3d01f8f093806c10d25a1222027895dcf2bc7536afed08c82e05ac34f',
+            'redirectUri' => '127.0.0.1:8000',
+        ]);
+        /*if (!isset($_GET['code'])) {
+            // If we don't have an authorization code then get one
+            $authUrl = $provider->getAuthorizationUrl();
+            $_SESSION['oauth2state'] = $provider->getState();
+            header('Location: ' . $authUrl);
+            exit;
+        }
+
+        if (isset($_GET['code']) && !isset($_SESSION['token'])) {
+            try {
+                // Try to get an access token (using the authorization code grant)
+                $token = $provider->getAccessToken('authorization_code', [
+                    'code' => $_GET['code']
+                ]);
+
+            } catch (Exception $e) {
+                print($e->getMessage());
+                exit;
+            }
+
+            // Use this to interact with an API on the users behalf
+            $_SESSION['token'] = $token->getToken();
+        }
+
+        if (isset($_SESSION['token'])) {
+            $user = $provider->getResourceOwner($_SESSION['token']);
+            printf('Hello %s!', $user->getName());
+            return;
+        }*/
 
         return $this->render('administration/index.html.twig', [
             'title' => 'Index Admin',
-            'lastComment' => $lastComment
+            'lastComment' => $lastComment,
+            'statPhotos' => $statPhotos,
+            'statAlbums' => $statAlbums,
         ]);
     }
 
@@ -87,18 +131,40 @@ class AdministrationController extends Controller
             $album->setStatus($_POST['status']);
             if (isset($_POST["sousAlbumId"]) and !empty($_POST["sousAlbumId"])) {
                 foreach ($_POST['sousAlbumId'] as $position => $id) {
-                    /** @var SousAlbum $sousAlbum */
-                    $sousAlbum = $this->getDoctrine()->getRepository(SousAlbum::class)->findOneBy(['id' => $id]);
-                    $sousAlbum->setPosition($position);
-                    $sousAlbum->setName($_POST['sousAlbumName'][$position]);
-                    $sousAlbum->setMessage($_POST['sousAlbumMessage'][$position]);
+                    if (!is_null($id) AND !empty($id)) {
+                        /** @var SousAlbum $sousAlbum */
+                        $sousAlbum = $this->getDoctrine()->getRepository(SousAlbum::class)->findOneBy(['id' => $id]);
+                        if (!is_null($sousAlbum)) {
+                            $sousAlbum->setPosition($position);
+                            $sousAlbum->setName($_POST['sousAlbumName'][$position]);
+                            $sousAlbum->setMessage($_POST['sousAlbumMessage'][$position]);
+                            $this->getDoctrine()->getManager()->flush();
+                        }
+                    } else {
+                        $sousAlbum = new SousAlbum();
+                        $sousAlbum->setPosition($position);
+                        $sousAlbum->setName($_POST['sousAlbumName'][$position]);
+                        $sousAlbum->setMessage($_POST['sousAlbumMessage'][$position]);
+                        $album->addSousAlbum($sousAlbum);
+                        $this->getDoctrine()->getManager()->persist($sousAlbum);
+                        $this->getDoctrine()->getManager()->flush();
+                    }
 
+
+                }
+            }
+            if (isset($_POST["photoPosition"]) and !empty($_POST["photoPosition"])) {
+                foreach ($_POST['photoPosition'] as $idPhoto => $position) {
+                    $photo = $this->getDoctrine()->getRepository(Photo::class)->findOneBy(['id' => $idPhoto]);
+                    $photo->setPosition($position);
                     $this->getDoctrine()->getManager()->flush();
                 }
             }
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirect('/administration/album');
+            if (!is_null($this->get('session')->get('actionAdmin'))) {
+                $this->get('session')->set('actionAdmin', null);
+            }
+            return $this->redirectToRoute('administrationeditAlbum', ['id' => $album->getId()]);
 
         }
         return $this->render('administration/editAlbum.html.twig', [

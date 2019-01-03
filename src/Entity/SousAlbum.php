@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SousAlbumRepository")
@@ -25,6 +26,7 @@ class SousAlbum
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Photo", mappedBy="sousAlbum", cascade={"all"})
+     * @OrderBy({"position" = "ASC"})
      */
     private $photos;
 

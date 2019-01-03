@@ -1,13 +1,13 @@
 <div class="navbar navbar-fixed-top" id="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="" href="{{ path('home') }}"><h1>Patricia - Marcy Photo Club</h1></a>
+            <a class="" href="{{ path('home') }}"><h1>Patricia Martin Photos</h1></a>
         </div>
         <ul class="nav navbar-nav navbar-right hidden-xs hidden-sm hidden-md">
             <li class="active">
                 <a class="js-scrollTo anchor hidden-xs hidden-sm hidden-md"
                    href="{{ path('home') }}{% if app.request.pathInfo == "/" %}#top{% endif %}" id="menu-top">
-                    Home
+                    Accueil
                 </a>
             </li>
             <li>
@@ -30,7 +30,7 @@
                 <a class="js-scrollTo anchor hidden-xs hidden-sm hidden-md"
                    href="{{ path('home') }}{% if app.request.pathInfo == "/" %}#newLetter{% endif %}"
                    id="menu-newLetter">
-                    Newletter
+                    Abonnement
                 </a>
             </li>
             <li>

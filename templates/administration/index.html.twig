@@ -3,12 +3,68 @@
 {% block title %}{{ title }}!{% endblock %}
 
 {% block body %}
+
     <div class="addAlbum">
         <div class="content">
+            <div class="round row">
+                <div class="col-xs-12">
+                    <p>Bienvenue dans l'administration.</p>
+                    <p>Il y a {{ statPhotos.total }} photos sur ce le site, réparti dans {{ statAlbums.total }}
+                        albums</p>
+                </div>
+            </div>
+            {% if statPhotos.inNoWhere is not empty or statAlbums.noMiniature is not empty %}
+                <h4 class="titleError">Erreur</h4>
+                <div class="round messageError row">
+                    {% if statPhotos.inNoWhere is not empty %}
+                        <div class="col-ws-12">
+                            Les photos ci dessous n'aparraise dans aucun album:
+                        </div>
+                        {% for photo in statPhotos.inNoWhere %}
+                            <div class="col-xs-3" id="photo_{{ photo.id }}">
+                                <div class="menuPhoto">
+                                    <i class="fa fa-trash deletePhoto"
+                                       data-photo="{{ photo.id }}"></i>
 
+                                    <i class="fa fa-eye viewPhoto"
+                                       data-photo="{{ asset("albums/" ~ photo.image) }}"></i>
+                                </div>
+                                <img src="{{ vich_uploader_asset(photo, 'imageFile') }}"
+                                     class="img-responsive img-rounded album-mini">
+                            </div>
+
+                        {% endfor %}
+                    {% endif %}
+                    {% if statAlbums.noMiniature is not empty %}
+                        <div class="col-ws-12">
+                            Les Albums ci dessous n'ont pas de miniature:
+                        </div>
+
+                        {% for album in statAlbums.noMiniature %}
+                            <div class="row titlePage">
+                                <div class="col-xs-10">
+                                    {{ album.name }}
+                                </div>
+                                <div class="col-xs-1">
+                                    <a href="{{ path('album', {'dir': album.dir}) }}" target="_blank">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </div>
+                                <div class="col-xs-1">
+                                    <a href="{{ path('administrationeditAlbum', {'id': album.id}) }}">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+            {% endif %}
+
+
+            <h4>Dernier commentaires</h4>
             <div class="round ">
-
-
                 <div class="row titlePage">
                     <div class="col-xs-2">
                         Date
@@ -56,8 +112,46 @@
                     </div>
                 {% endfor %}
             </div>
+            <h4>Un peu d'inspiration</h4>
+            <div class="round row">
+                <div class="col-xs-3">
+                    <img src="https://source.unsplash.com/random/?nature"
+                         class="img-responsive img-rounded album-mini">
+                </div>
+                <div class="col-xs-3">
+                    <img src="https://source.unsplash.com/random/?urban"
+                         class="img-responsive img-rounded album-mini">
+                </div>
+                <div class="col-xs-3">
+                    <img src="https://source.unsplash.com/daily/?macro"
+                         class="img-responsive img-rounded album-mini">
+                </div>
+                <div class="col-xs-3">
+                    <img src="https://source.unsplash.com/daily/?bird"
+                         class="img-responsive img-rounded album-mini">
+                </div>
+                <div class="col-xs-3">
+                    <img src="https://source.unsplash.com/daily/?animal"
+                         class="img-responsive img-rounded album-mini">
+                </div>
+                <div class="col-xs-3">
+                    <img src="https://source.unsplash.com/daily/?move"
+                         class="img-responsive img-rounded album-mini">
+                </div>
+                <div class="col-xs-3">
+                    <img src="https://source.unsplash.com/daily/?water"
+                         class="img-responsive img-rounded album-mini">
+                </div>
+                <div class="col-xs-3">
+                    <img src="https://source.unsplash.com/daily/?flower"
+                         class="img-responsive img-rounded album-mini">
+                </div>
+                <div class="col-xs-6">
+                    <img src="https://source.unsplash.com/daily/?panorama"
+                         class="img-responsive img-rounded album-mini">
+                </div>
 
-
+            </div>
             <h4>TODO LIST</h4>
             <ul>
                 <li><s>Add Album</s>
@@ -87,11 +181,15 @@
                     </s>
                 </li>
                 <li>
-                    Admin Background
-                    <ul>
-                        <li>Edit</li>
-                        <li>requette Ajax pour aller chercher les albums</li>
-                    </ul>
+                    <s>Admin Background
+                        <ul>
+                            <li>Edit</li>
+                            <li>requette Ajax pour aller chercher les albums</li>
+                        </ul>
+                    </s>
+                </li>
+                <li>
+                    Test Mail sur cerynna.fr
                 </li>
             </ul>
 

@@ -391,194 +391,265 @@ span.border {
       background-color: #c5e3ff;
       color: #000; }
 
-.admin ul {
-  list-style: none; }
-  .admin ul li {
+.admin {
+  /*  span {
+      font-size: 0.8em;
+      background-color: rgb(197, 227, 255);
+      color: rgba(40, 46, 52, 1);
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 23px 50px 0 0;
+      padding: 5px;
+      border-radius: 0 0 5px 5px;
+      border-bottom: 3px solid rgba(40, 46, 52, 1);
+      border-left: 3px solid rgba(40, 46, 52, 1);
+      border-right: 3px solid rgba(40, 46, 52, 1);
+    }*/
+  /*  p {
+      color: rgba(40, 46, 52, 1);
+      height: 100%;
+      max-height: 150px;
+      padding: 40px 10px 5px 10px;
+      background-color: rgba(197, 227, 255, 0.42);
+      width: 90%;
+      margin: -15px auto 0 auto;
+      border-radius: 0 0 10px 10px;
+      border: 5px solid rgba(40, 46, 52, 1);
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }*/ }
+  .admin ul {
     list-style: none; }
-.admin .grid {
-  position: relative; }
-.admin .item {
-  display: block;
-  position: absolute;
-  z-index: 1; }
-.admin .item.muuri-item-dragging {
-  z-index: 3; }
-.admin .item.muuri-item-releasing {
-  z-index: 2; }
-.admin .item.muuri-item-hidden {
-  z-index: 0; }
-.admin .item-content {
-  position: relative;
-  width: 100%;
-  height: 100%; }
-.admin .border {
-  border: 2px solid #282e34;
-  padding: 5px;
-  margin: -2px;
-  border-radius: 10px; }
-.admin .album-mini {
-  margin: 10px auto 10px auto;
-  height: 200px !important;
-  left: -100px;
-  right: -100px;
-  background: rgba(40, 46, 52, 0.5); }
-.admin .status {
-  border: none;
-  background: none;
-  margin: 0;
-  padding: 0;
-  color: #FFF; }
-  .admin .status i {
-    color: #282e34;
-    background: #FFF;
-    padding-top: 5px; }
-.admin .album-ultramini {
-  margin: 10px auto 10px auto;
-  height: 80px !important;
-  background: rgba(40, 46, 52, 0.5); }
-.admin .dropdown-menu {
-  padding: 10px !important;
-  margin-top: -5px !important;
-  border-radius: 0 !important; }
-.admin .dropdown-menu > li {
-  padding: 5px;
-  vertical-align: middle; }
-  .admin .dropdown-menu > li i {
+    .admin ul li {
+      list-style: none; }
+  .admin .grid {
+    position: relative; }
+  .admin .addNewSousAlbum {
+    text-align: right;
+    margin-bottom: 20px; }
+    .admin .addNewSousAlbum span {
+      background: #282e34;
+      color: #FFF;
+      border: 3px solid #282e34;
+      border-radius: 5px !important;
+      position: relative;
+      bottom: 0;
+      padding: 5px 10px;
+      cursor: pointer; }
+      .admin .addNewSousAlbum span:hover {
+        background: #FFF;
+        color: #282e34;
+        border: 3px solid #282e34; }
+  .admin .item {
+    display: block;
+    position: absolute;
+    z-index: 1; }
+  .admin .item.muuri-item-dragging {
+    z-index: 3; }
+  .admin .item.muuri-item-releasing {
+    z-index: 2; }
+  .admin .item.muuri-item-hidden {
+    z-index: 0; }
+  .admin .item-content {
+    position: relative;
+    width: 100%;
+    height: 100%; }
+  .admin .border {
+    border: 2px solid #282e34;
+    padding: 5px;
+    margin: -2px;
+    border-radius: 10px; }
+  .admin .album-mini {
+    margin: 10px auto 10px auto;
+    height: 200px !important;
+    left: -100px;
+    right: -100px;
+    background: rgba(40, 46, 52, 0.5); }
+  .admin .status {
+    border: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+    color: #FFF; }
+    .admin .status i {
+      color: #282e34;
+      background: #FFF;
+      padding-top: 5px; }
+  .admin .album-ultramini {
+    margin: 10px auto 10px auto;
+    height: 80px !important;
+    background: rgba(40, 46, 52, 0.5); }
+  .admin .dropdown-menu {
+    padding: 10px !important;
+    margin-top: -5px !important;
+    border-radius: 0 !important; }
+  .admin .dropdown-menu > li {
+    padding: 5px;
+    vertical-align: middle; }
+    .admin .dropdown-menu > li i {
+      color: #FFF;
+      padding-top: 5px; }
+  .admin .dropdown-menu > li:hover {
     color: #FFF;
-    padding-top: 5px; }
-.admin .dropdown-menu > li:hover {
-  color: #FFF;
-  background: #282e34; }
-.admin .btn {
-  padding: 10px 0 !important;
-  font-size: 0.8em !important;
-  background: #282e34;
-  color: #FFF;
-  border-radius: 5px !important;
-  outline: none;
-  width: 100%;
-  margin: 5px 0 0 0; }
-.admin .btn:hover {
-  color: #FFF !important;
-  font-weight: bold;
-  outline: none; }
-.admin .round {
-  border-radius: 5px;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 5px solid #282e34;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background: #FFF; }
-  .admin .round.atOne {
-    border: 5px solid #389e9f; }
-.admin .menuPhoto {
-  position: absolute;
-  margin: 20px 20px 0 10px;
-  top: 0;
-  right: 0; }
-.admin .adminPhoto {
-  background-color: #c5e3ff;
-  padding: 5px;
-  margin: 20px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px; }
-.admin #result {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #c5e3ff;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px; }
-.admin h4 {
-  color: #FFF;
-  background-color: #282e34;
-  text-align: center;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  font-size: 1.5em;
-  padding: 5px 0; }
-.admin h3 {
-  color: #FFF;
-  background-color: #282e34;
-  text-align: left;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  margin-top: -20px;
-  font-size: 1.5em;
-  padding: 5px 20px;
-  z-index: 5; }
-.admin span {
-  font-size: 0.8em;
-  background-color: #c5e3ff;
-  color: #282e34;
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin: 23px 50px 0 0;
-  padding: 5px;
-  border-radius: 0 0 5px 5px;
-  border-bottom: 3px solid #282e34;
-  border-left: 3px solid #282e34;
-  border-right: 3px solid #282e34; }
-.admin p {
-  color: #282e34;
-  height: 100%;
-  max-height: 150px;
-  padding: 40px 10px 5px 10px;
-  background-color: rgba(197, 227, 255, 0.42);
-  width: 90%;
-  margin: -15px auto 0 auto;
-  border-radius: 0 0 10px 10px;
-  border: 5px solid #282e34;
-  overflow-x: hidden;
-  overflow-y: scroll; }
-.admin i {
-  cursor: pointer;
-  width: 30px;
-  background: none;
-  border-radius: 5px;
-  border: 3px #282e34 solid;
-  color: #FFF;
-  background: #282e34;
-  height: auto;
-  margin: 0;
-  padding: 2px;
-  font-size: 20px;
-  text-align: center; }
-  .admin i:hover {
+    background: #282e34; }
+  .admin .btn {
+    padding: 10px 0 !important;
+    font-size: 0.8em !important;
+    background: #282e34;
+    color: #FFF;
+    border-radius: 5px !important;
+    outline: none;
+    width: 100%;
+    margin: 5px 0 0 0; }
+  .admin .btn:hover {
+    color: #FFF !important;
+    font-weight: bold;
+    outline: none; }
+  .admin .round {
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 5px solid #282e34;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background: #FFF;
+    color: #000; }
+    .admin .round.atOne {
+      border: 5px solid #389e9f; }
+    .admin .round.messageError {
+      border: 5px solid #560000;
+      background: #ffdbe2;
+      color: #000; }
+  .admin .menuPhoto {
+    position: absolute;
+    margin: 20px 20px 0 10px;
+    top: 0;
+    right: 0; }
+  .admin .adminPhoto {
+    background-color: #c5e3ff;
+    padding: 5px;
+    margin: 20px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px; }
+  .admin #result {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #c5e3ff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px; }
+  .admin h4 {
+    color: #FFF;
+    background-color: #282e34;
+    text-align: center;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    padding: 5px 0; }
+  .admin h3 {
+    color: #FFF;
+    background-color: #282e34;
+    text-align: left;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-top: -20px;
+    font-size: 1.5em;
+    padding: 5px 20px;
+    z-index: 5; }
+  .admin i {
+    cursor: pointer;
+    width: 30px;
+    background: none;
+    border-radius: 5px;
     border: 3px #282e34 solid;
-    color: #282e34;
-    background: #FFF; }
-.admin img {
-  border: 5px solid #282e34;
-  border-radius: 5px; }
-.admin .img-mini {
-  max-width: 200px;
-  max-height: 200px; }
-.admin form input, .admin form textarea {
-  border: 1px solid #c5e3ff;
-  width: 100%;
-  padding: 5px;
-  border-radius: 5px; }
-.admin form label {
-  margin: 20px 0 10px 10px; }
-.admin form textarea {
-  height: 30vh; }
-.admin form input[type="submit"] {
-  padding: 10px;
-  border: 0;
-  border-radius: 20px;
-  width: 100px;
-  outline: none; }
-.admin form button {
-  border: 0;
-  background: none;
-  color: #FFF; }
+    color: #FFF;
+    background: #282e34;
+    height: auto;
+    margin: 0;
+    padding: 2px;
+    font-size: 20px;
+    text-align: center; }
+    .admin i:hover {
+      border: 3px #282e34 solid;
+      color: #282e34;
+      background: #FFF; }
+  .admin img {
+    border: 5px solid #282e34;
+    border-radius: 5px; }
+  .admin .img-mini {
+    max-width: 200px;
+    max-height: 200px; }
+  .admin form input, .admin form textarea {
+    border: 1px solid #c5e3ff;
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px; }
+  .admin form label {
+    margin: 20px 0 10px 10px; }
+  .admin form textarea {
+    height: 30vh; }
+  .admin form input[type="submit"] {
+    padding: 10px;
+    border: 0;
+    border-radius: 20px;
+    width: 100px;
+    outline: none; }
+  .admin form button {
+    border: 0;
+    background: none;
+    color: #FFF; }
+  .admin .titleError {
+    background: #560000; }
+  .admin .changeParentPhoto {
+    background: red;
+    padding: 10px;
+    width: 300px;
+    min-height: 100px;
+    position: absolute;
+    display: none; }
+    .admin .changeParentPhoto .actionParentPhoto {
+      background: #282e34;
+      color: #FFF;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      margin-bottom: 5px; }
+      .admin .changeParentPhoto .actionParentPhoto:hover {
+        background: rgba(60, 180, 191, 0.67); }
+  .admin .deleteSousAlbum {
+    display: none;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(40, 46, 52, 0.51);
+    left: 0; }
+    .admin .deleteSousAlbum .content {
+      width: 600px;
+      margin: 30px auto;
+      background: #FFF; }
+      .admin .deleteSousAlbum .content .menu {
+        padding-top: 30px; }
+      .admin .deleteSousAlbum .content .step.step-2 {
+        display: none; }
+      .admin .deleteSousAlbum .content .step .choice {
+        padding-top: 30px; }
+      .admin .deleteSousAlbum .content .step .deletePhotos:hover {
+        background: red; }
+      .admin .deleteSousAlbum .content .step .choiceTransfere {
+        background: #282e34;
+        color: #FFF;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-bottom: 5px; }
+        .admin .deleteSousAlbum .content .step .choiceTransfere:hover {
+          background: rgba(60, 180, 191, 0.67); }
 
 .home .content {
   color: #777;
@@ -662,6 +733,8 @@ span.border {
   padding: 10px;
   border-radius: 5px;
   background: #ebebeb; }
+.newLetter .message {
+  font-size: 0.6em; }
 
 .menuAlbum {
   position: fixed;
